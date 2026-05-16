@@ -4,11 +4,31 @@ https://juanfraire.github.io/storm/
 Repo:
 https://github.com/juanfraire/storm
 
-- Can you help me workout the logo in mark.svg? The design is quite naive and simple. Can you propose more professional alternatives?
+
 
 
 
 - Check the spanish terms to corresponds to those used in ucema Spanish material.
+
+
+
+2.29
+MWp
+BESS
+0.00
+MWh
+MATE
+1.98
+GWh/y
+MATER
+0.00
+GWh/y
+MATP
+759
+kW
+Spot
+875
+MWh/y
 
 
 

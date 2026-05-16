@@ -749,9 +749,206 @@
     targets.forEach(t => obs.observe(t));
   }
 
+  /* ────────────────────────── Interactive Explorer ────────────── */
+  // Raw campaign data (Case 3, full year, 12 scenarios)
+  // Keys: beta, pvCost, bessCost, matePrice
+  const EXPLORER_DATA = {
+    // CVaR beta sweep  (β ∈ [0, 0.25, 0.5, 1.0, 2.0])
+    beta: [
+      { beta: 0.0,  pv: 1.86, bess: 0.00, mate: 2.094, mater: 0.000, matp: 758, spot: 926,  capex: 120.2, opex: 400.3, total: 520.4 },
+      { beta: 0.25, pv: 2.09, bess: 0.00, mate: 2.025, mater: 0.000, matp: 758, spot: 894,  capex: 135.2, opex: 386.8, total: 522.0 },
+      { beta: 0.50, pv: 2.29, bess: 0.00, mate: 1.978, mater: 0.000, matp: 759, spot: 875,  capex: 147.7, opex: 377.6, total: 525.4 },
+      { beta: 1.00, pv: 2.59, bess: 0.08, mate: 1.900, mater: 0.000, matp: 683, spot: 852,  capex: 175.3, opex: 361.7, total: 537.0 },
+      { beta: 2.00, pv: 3.06, bess: 0.40, mate: 1.753, mater: 0.000, matp: 600, spot: 828,  capex: 236.6, opex: 338.5, total: 575.1 },
+    ],
+    // PV cost sweep  (γ_PV ∈ [400, 550, 700])
+    pvCost: [
+      { pvCost: 400, pv: 2.61, bess: 0.00, mate: 1.919, mater: 0, matp: 759, spot: 851, capex: 122.7, opex: 365.7, total: 488.3 },
+      { pvCost: 550, pv: 2.29, bess: 0.00, mate: 1.978, mater: 0, matp: 759, spot: 875, capex: 147.7, opex: 377.6, total: 525.4 },
+      { pvCost: 700, pv: 1.86, bess: 0.00, mate: 2.094, mater: 0, matp: 758, spot: 926, capex: 120.2, opex: 400.3, total: 520.4 },
+    ],
+    // BESS cost sweep  (γ_BESS ∈ [200, 300, 400, 600, 800])
+    bessCost: [
+      { bessCost: 200, pv: 2.88, bess: 2.09, mate: 1.362, mater: 0, matp: 329, spot: 859, capex: 253.8, opex: 298.5, total: 552.4 },
+      { bessCost: 300, pv: 2.31, bess: 0.12, mate: 1.941, mater: 0, matp: 662, spot: 858, capex: 155.6, opex: 370.4, total: 526.0 },
+      { bessCost: 400, pv: 2.29, bess: 0.00, mate: 1.978, mater: 0, matp: 759, spot: 875, capex: 147.7, opex: 377.6, total: 525.4 },
+      { bessCost: 600, pv: 2.29, bess: 0.00, mate: 1.978, mater: 0, matp: 759, spot: 875, capex: 147.7, opex: 377.6, total: 525.4 },
+      { bessCost: 800, pv: 2.29, bess: 0.00, mate: 1.978, mater: 0, matp: 759, spot: 875, capex: 147.7, opex: 377.6, total: 525.4 },
+    ],
+    // MATE price sweep  (USD/MWh ∈ [45, 50, 56, 70, 90])
+    matePrice: [
+      { matePrice: 45, pv: 2.21, bess: 0.00, mate: 2.716, mater: 0, matp: 759, spot: 165,  capex: 142.6, opex: 355.0, total: 497.6 },
+      { matePrice: 50, pv: 2.25, bess: 0.00, mate: 2.410, mater: 0, matp: 759, spot: 457,  capex: 145.1, opex: 366.2, total: 511.3 },
+      { matePrice: 56, pv: 2.29, bess: 0.00, mate: 1.978, mater: 0, matp: 759, spot: 875,  capex: 147.7, opex: 377.6, total: 525.4 },
+      { matePrice: 70, pv: 2.29, bess: 0.00, mate: 1.978, mater: 0, matp: 759, spot: 875,  capex: 147.7, opex: 377.6, total: 525.4 },
+      { matePrice: 90, pv: 2.29, bess: 0.00, mate: 1.978, mater: 0, matp: 759, spot: 875,  capex: 147.7, opex: 377.6, total: 525.4 },
+    ],
+  };
+
+  // Linear interpolation helper
+  function lerpTable(table, key, value) {
+    const sorted = [...table].sort((a, b) => a[key] - b[key]);
+    if (value <= sorted[0][key]) return sorted[0];
+    if (value >= sorted[sorted.length - 1][key]) return sorted[sorted.length - 1];
+    for (let i = 0; i < sorted.length - 1; i++) {
+      const lo = sorted[i], hi = sorted[i + 1];
+      if (value >= lo[key] && value <= hi[key]) {
+        const t = (value - lo[key]) / (hi[key] - lo[key]);
+        const out = {};
+        for (const k of Object.keys(lo)) {
+          out[k] = (typeof lo[k] === 'number') ? lo[k] + t * (hi[k] - lo[k]) : lo[k];
+        }
+        return out;
+      }
+    }
+    return sorted[sorted.length - 1];
+  }
+
+  function computeExploration(beta, pvCost, bessCost, matePrice) {
+    // Each slider is treated independently: we interpolate within its sweep
+    // holding the others at their base values, then cross-fade contributions
+    const b  = lerpTable(EXPLORER_DATA.beta,      'beta',      beta);
+    const pv = lerpTable(EXPLORER_DATA.pvCost,    'pvCost',    pvCost);
+    const be = lerpTable(EXPLORER_DATA.bessCost,  'bessCost',  bessCost);
+    const mt = lerpTable(EXPLORER_DATA.matePrice, 'matePrice', matePrice);
+
+    // Simple additive heuristic (not a real solve, but captures directions)
+    const wB = 0.35, wPV = 0.25, wBE = 0.25, wMT = 0.15;
+    const blend = (k) => wB * b[k] + wPV * pv[k] + wBE * be[k] + wMT * mt[k];
+
+    return {
+      pv: blend('pv'),
+      bess: blend('bess'),
+      mate: blend('mate'),
+      mater: blend('mater'),
+      matp: blend('matp'),
+      spot: blend('spot'),
+      capex: blend('capex'),
+      opex: blend('opex'),
+      total: blend('total'),
+    };
+  }
+
+  function updateExplorerDOM(r) {
+    // text values
+    document.getElementById('out-total').textContent = r.total.toFixed(1);
+    document.getElementById('out-capex').textContent = r.capex.toFixed(1);
+    document.getElementById('out-opex').textContent = r.opex.toFixed(1);
+
+    document.getElementById('lbl-pv').textContent    = r.pv.toFixed(2);
+    document.getElementById('lbl-bess').textContent  = r.bess.toFixed(2);
+    document.getElementById('lbl-mate').textContent  = r.mate.toFixed(2);
+    document.getElementById('lbl-mater').textContent = r.mater.toFixed(2);
+    document.getElementById('lbl-matp').textContent  = Math.round(r.matp);
+    document.getElementById('lbl-spot').textContent  = Math.round(r.spot);
+
+    // stack bar widths (proportional to energy flows)
+    const totalVol = Math.max(r.pv * 1000 + r.mate + r.mater + r.spot, 1); // pv in MWh equivalent
+    const wPV    = clamp((r.pv * 1000) / totalVol * 100, 0, 100);
+    const wBESS  = clamp(r.bess * 30 / totalVol * 100, 0, 100); // rough scaling
+    const wMATE  = clamp(r.mate / totalVol * 100, 0, 100);
+    const wMATER = clamp(r.mater / totalVol * 100, 0, 100);
+    const wMATP  = clamp(r.matp / 10 / totalVol * 100, 0, 100);
+    const wSPOT  = Math.max(100 - wPV - wBESS - wMATE - wMATER - wMATP, 2);
+
+    document.getElementById('seg-pv').style.setProperty('--w', wPV);
+    document.getElementById('seg-bess').style.setProperty('--w', wBESS);
+    document.getElementById('seg-mate').style.setProperty('--w', wMATE);
+    document.getElementById('seg-mater').style.setProperty('--w', wMATER);
+    document.getElementById('seg-matp').style.setProperty('--w', wMATP);
+    document.getElementById('seg-spot').style.setProperty('--w', wSPOT);
+
+    // hedge gauge: physical supply / total supply
+    const physicalMWh = r.pv * 1000 + r.bess * 4; // rough annual equivalent
+    const totalSupply = physicalMWh + r.mate + r.mater + r.spot;
+    const hedgePct = clamp(physicalMWh / totalSupply * 100, 0, 100);
+    document.getElementById('hedge-fill').style.width = hedgePct + '%';
+    document.getElementById('hedge-pct').textContent = hedgePct.toFixed(0) + '%';
+
+    // donut chart
+    renderExplorerDonut(r.capex, r.opex);
+  }
+
+  function renderExplorerDonut(capex, opex) {
+    const svg = document.getElementById('explorer-donut');
+    if (!svg) return;
+    const W = 200, H = 120, cx = 100, cy = 60, r = 45, thickness = 14;
+    const total = capex + opex;
+    const capexPct = capex / total;
+    const opexPct  = 1 - capexPct;
+
+    const arc = (start, end) => {
+      const x1 = cx + r * Math.cos(start * TAU - Math.PI / 2);
+      const y1 = cy + r * Math.sin(start * TAU - Math.PI / 2);
+      const x2 = cx + r * Math.cos(end * TAU - Math.PI / 2);
+      const y2 = cy + r * Math.sin(end * TAU - Math.PI / 2);
+      const large = (end - start) > 0.5 ? 1 : 0;
+      return `M ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2}`;
+    };
+
+    svg.appendChild(el('path', {
+      d: arc(0, capexPct), fill: 'none',
+      stroke: '#FFB454', 'stroke-width': thickness, 'stroke-linecap': 'round',
+    }));
+    svg.appendChild(el('path', {
+      d: arc(capexPct, 1), fill: 'none',
+      stroke: '#5BD4FF', 'stroke-width': thickness, 'stroke-linecap': 'round',
+    }));
+
+    // center text
+    const tCapex = el('text', {
+      x: cx - 26, y: cy + 4, fill: '#FFB454',
+      'font-family': 'JetBrains Mono', 'font-size': 11, 'text-anchor': 'end',
+    });
+    tCapex.textContent = 'CAPEX';
+    svg.appendChild(tCapex);
+    const tOpex = el('text', {
+      x: cx + 26, y: cy + 4, fill: '#5BD4FF',
+      'font-family': 'JetBrains Mono', 'font-size': 11, 'text-anchor': 'start',
+    });
+    tOpex.textContent = 'OPEX';
+    svg.appendChild(tOpex);
+
+    // legend row
+    const legendY = H - 18;
+    [[0, '#FFB454', 'CAPEX', capex], [80, '#5BD4FF', 'OPEX', opex]].forEach(([x, color, label, val]) => {
+      svg.appendChild(el('rect', { x: cx - 50 + x, y: legendY - 8, width: 8, height: 8, fill: color, rx: 2 }));
+      const t = el('text', {
+        x: cx - 38 + x, y: legendY, fill: '#A0AABF',
+        'font-family': 'JetBrains Mono', 'font-size': 9,
+      });
+      t.textContent = label + ' ' + val.toFixed(0);
+      svg.appendChild(t);
+    });
+  }
+
+  function renderExplorer() {
+    const beta  = parseFloat(document.getElementById('slider-beta').value);
+    const pv    = parseFloat(document.getElementById('slider-pv').value);
+    const bess  = parseFloat(document.getElementById('slider-bess').value);
+    const mate  = parseFloat(document.getElementById('slider-mate').value);
+    const r = computeExploration(beta, pv, bess, mate);
+    updateExplorerDOM(r);
+  }
+
+  function initExplorer() {
+    const ids = ['slider-beta', 'slider-pv', 'slider-bess', 'slider-mate'];
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('input', () => {
+        // update live value label
+        const valEl = document.getElementById(id.replace('slider-', 'val-'));
+        if (valEl) valEl.textContent = (id === 'slider-beta') ? parseFloat(el.value).toFixed(2) : el.value;
+        renderExplorer();
+      });
+    });
+    renderExplorer();
+  }
+
   /* ────────────────────────── boot ────────────────────────────── */
   function renderAllCharts() {
-    ['fan-demand', 'fan-spot', 'fan-pv', 'cvar-chart', 'results-bars'].forEach(clearSvg);
+    ['fan-demand', 'fan-spot', 'fan-pv', 'cvar-chart', 'results-bars', 'explorer-donut'].forEach(clearSvg);
     renderFan('fan-demand', 'demand', {
       median: '#5BD4FF', trace: '#5BD4FF',
       envInner: '#5BD4FF', envOuter: '#5BD4FF',
@@ -766,6 +963,7 @@
     });
     renderCVaRChart();
     renderResultsBars();
+    renderExplorer();
   }
 
   function boot() {
@@ -776,6 +974,7 @@
     initScrollProgress();
     initActiveNav();
     initCopyButtons();
+    initExplorer();
     // re-render charts when the user toggles EN/ES so axis labels update
     document.addEventListener('langchange', renderAllCharts);
   }

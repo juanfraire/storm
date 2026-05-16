@@ -438,6 +438,138 @@ m.<span class="fn">optimize</span>()  <span class="com"># MIP gap target 2% · r
     </div>
   </section>
 
+  <!-- ===================================================== EXPLORER -->
+  <section class="section" id="explorer">
+    <div class="arg-divider" aria-hidden="true"></div>
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow" data-i18n="explorer.eyebrow">Interactive explorer</span>
+        <h2 class="h-section" data-i18n="explorer.h2">Turn the knobs. See the plan change.</h2>
+        <p class="lede" data-i18n="explorer.lede">
+          Based on the full-year Case 3 campaign results. Each data point is an exact
+          Gurobi solve; intermediate values are interpolated so you can explore the
+          sensitivity surface continuously.
+        </p>
+      </div>
+
+      <div class="explorer-layout">
+        <!-- LEFT: Controls -->
+        <div class="explorer-panel explorer-controls">
+          <div class="explorer-control">
+            <div class="control-head">
+              <label for="slider-beta" data-i18n="explorer.betaLabel">Risk aversion β</label>
+              <span class="control-value" id="val-beta">0.50</span>
+            </div>
+            <input type="range" id="slider-beta" min="0" max="2" step="0.05" value="0.5" class="explorer-slider">
+            <div class="control-range">
+              <span data-i18n="explorer.rn">RN</span>
+              <span data-i18n="explorer.cvar">CVaR</span>
+            </div>
+          </div>
+
+          <div class="explorer-control">
+            <div class="control-head">
+              <label for="slider-pv" data-i18n="explorer.pvLabel">PV cost γ<sub>PV</sub></label>
+              <span class="control-value" id="val-pv">550</span>
+              <span class="control-unit">USD/kW<sub>p</sub></span>
+            </div>
+            <input type="range" id="slider-pv" min="300" max="700" step="10" value="550" class="explorer-slider">
+            <div class="control-range">
+              <span>300</span>
+              <span>700</span>
+            </div>
+          </div>
+
+          <div class="explorer-control">
+            <div class="control-head">
+              <label for="slider-bess" data-i18n="explorer.bessLabel">BESS cost γ<sub>BESS</sub></label>
+              <span class="control-value" id="val-bess">600</span>
+              <span class="control-unit">USD/kWh</span>
+            </div>
+            <input type="range" id="slider-bess" min="150" max="800" step="10" value="600" class="explorer-slider">
+            <div class="control-range">
+              <span>150</span>
+              <span>800</span>
+            </div>
+          </div>
+
+          <div class="explorer-control">
+            <div class="control-head">
+              <label for="slider-mate" data-i18n="explorer.mateLabel">MATE price</label>
+              <span class="control-value" id="val-mate">56</span>
+              <span class="control-unit">USD/MWh</span>
+            </div>
+            <input type="range" id="slider-mate" min="45" max="90" step="1" value="56" class="explorer-slider">
+            <div class="control-range">
+              <span>45</span>
+              <span>90</span>
+            </div>
+          </div>
+
+          <div class="explorer-note mono-12 muted" data-i18n="explorer.note">
+            MATER = 59, MATP = 15, PPAD spot = 16. Interpolated between campaign solve points.
+          </div>
+        </div>
+
+        <!-- RIGHT: Outputs -->
+        <div class="explorer-output">
+          <div class="explorer-kpis">
+            <div class="explorer-kpi">
+              <span class="explorer-kpi-label" data-i18n="explorer.kpi1">Total cost</span>
+              <span class="explorer-kpi-value" id="out-total">525.4</span>
+              <span class="explorer-kpi-unit">kUSD/y</span>
+            </div>
+            <div class="explorer-kpi">
+              <span class="explorer-kpi-label" data-i18n="explorer.kpi2">CAPEX</span>
+              <span class="explorer-kpi-value" id="out-capex">147.7</span>
+              <span class="explorer-kpi-unit">kUSD/y</span>
+            </div>
+            <div class="explorer-kpi">
+              <span class="explorer-kpi-label" data-i18n="explorer.kpi3">OPEX</span>
+              <span class="explorer-kpi-value" id="out-opex">377.6</span>
+              <span class="explorer-kpi-unit">kUSD/y</span>
+            </div>
+          </div>
+
+          <div class="explorer-bars">
+            <h4 class="explorer-bars-title" data-i18n="explorer.portfolioTitle">Portfolio mix</h4>
+            <div class="stack-bar" id="portfolio-bar">
+              <div class="stack-seg" id="seg-pv" style="--w:43;"><span>PV</span><b id="lbl-pv">2.29</b><i>MW<sub>p</sub></i></div>
+              <div class="stack-seg" id="seg-bess" style="--w:0;"><span>BESS</span><b id="lbl-bess">0.00</b><i>MWh</i></div>
+              <div class="stack-seg" id="seg-mate" style="--w:37;"><span>MATE</span><b id="lbl-mate">1.98</b><i>GWh/y</i></div>
+              <div class="stack-seg" id="seg-mater" style="--w:0; opacity:0.3;"><span>MATER</span><b id="lbl-mater">0.00</b><i>GWh/y</i></div>
+              <div class="stack-seg" id="seg-matp" style="--w:14;"><span>MATP</span><b id="lbl-matp">759</b><i>kW</i></div>
+              <div class="stack-seg" id="seg-spot" style="--w:6; background:var(--text-4);"><span>Spot</span><b id="lbl-spot">875</b><i>MWh/y</i></div>
+            </div>
+          </div>
+
+          <div class="explorer-mini">
+            <div class="card" style="padding:20px;">
+              <h4 style="font-size:13px; margin:0 0 12px;" data-i18n="explorer.costSplit">Cost split</h4>
+              <svg id="explorer-donut" viewBox="0 0 200 120" preserveAspectRatio="xMidYMid meet"></svg>
+            </div>
+            <div class="card" style="padding:20px;">
+              <h4 style="font-size:13px; margin:0 0 12px;" data-i18n="explorer.hedgeTitle">Physical hedge ratio</h4>
+              <div class="hedge-gauge">
+                <div class="hedge-track">
+                  <div class="hedge-fill" id="hedge-fill" style="width:43%;"></div>
+                </div>
+                <div class="hedge-labels">
+                  <span data-i18n="explorer.hedge0">Contracts</span>
+                  <span class="hedge-pct" id="hedge-pct">43%</span>
+                  <span data-i18n="explorer.hedge100">Physical</span>
+                </div>
+              </div>
+              <p class="muted mono-12" style="margin-top:10px;" data-i18n="explorer.hedgeNote">
+                PV self-consumption + BESS discharge as % of total supply.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ===================================================== FOUNDATIONS -->
   <section class="section" id="foundations" style="background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);">
     <div class="arg-divider" aria-hidden="true"></div>
