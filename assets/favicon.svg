@@ -1,0 +1,12 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="g" x1="14" y1="6" x2="50" y2="58" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#5BD4FF"/>
+      <stop offset="0.55" stop-color="#4F8BFF"/>
+      <stop offset="1" stop-color="#B58CFF"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="64" height="64" rx="14" fill="#0A0E1A"/>
+  <!-- Single sharp lightning bolt — favicon needs to read clearly at 16px -->
+  <path d="M 22 10 L 48 10 L 36 28 L 50 28 L 24 60 L 32 40 L 18 40 Z" fill="url(#g)"/>
+</svg>

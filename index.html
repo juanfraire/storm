@@ -1,0 +1,667 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="theme-color" content="#0A0E1A" />
+  <title>STORM — Stochastic Trading and Optimization under Regulation for MEM</title>
+  <meta name="description" content="STORM is a two-stage stochastic MILP for industrial-scale electricity procurement and behind-the-meter DER sizing under the post-Resolution SE 400/2025 Argentine wholesale market." />
+
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" />
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ===================================================== NAV -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a class="nav-brand" href="#top">
+        <img src="assets/mark.svg" alt="STORM mark" />
+        <span>STORM</span>
+      </a>
+      <div class="nav-links">
+        <a href="#model" data-i18n="nav.model">Model</a>
+        <a href="#workflow" data-i18n="nav.workflow">Workflow</a>
+        <a href="#foundations" data-i18n="nav.foundations">Foundations</a>
+        <a href="#results" data-i18n="nav.results">Results</a>
+        <a href="#applications" data-i18n="nav.applications">Applications</a>
+      </div>
+      <div class="nav-right">
+        <div class="lang-toggle" role="group" aria-label="Language">
+          <button type="button" data-lang-btn="en" aria-pressed="true">EN</button>
+          <button type="button" data-lang-btn="es" aria-pressed="false">ES</button>
+        </div>
+        <a class="nav-cta" href="#read">
+          <span data-i18n="nav.cta">Read the paper</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===================================================== HERO -->
+  <header class="hero" id="top">
+    <canvas class="hero-canvas" id="hero-canvas"></canvas>
+    <div class="hero-grid"></div>
+    <div class="hero-glow"></div>
+
+    <div class="container hero-content">
+      <span class="eyebrow" data-i18n="hero.eyebrow">Two-stage stochastic MILP · CVaR-aware · MEM Resolución SE&nbsp;400/2025</span>
+
+      <h1 class="h-display" data-i18n="hero.h1">
+        Optimization under<br />
+        <span class="gradient">uncertainty</span> for<br />
+        industrial energy systems.
+      </h1>
+
+      <p class="lede" data-i18n="hero.lede">
+        STORM is a computational framework that jointly designs the contracting portfolio
+        and behind-the-meter generation and storage for large electricity users in the
+        Argentine Wholesale Market (MEM) — pricing volume, power-adequacy, and tail
+        risk as first-class decisions rather than after-the-fact accounting.
+      </p>
+
+      <div class="meta-row">
+        <span data-i18n="hero.meta.1">MATER · MATE · MATP</span>
+        <span data-i18n="hero.meta.2">PV + BESS sizing</span>
+        <span data-i18n="hero.meta.3">35,040 × Δt = 15 min</span>
+        <span data-i18n="hero.meta.4">CVaR<sub>α=0.95</sub></span>
+        <span data-i18n="hero.meta.5">Gurobi 11</span>
+      </div>
+
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="#read">
+          <span data-i18n="hero.cta.read">Read the paper</span>
+          <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+        <a class="btn btn-secondary" href="#model" data-i18n="hero.cta.explore">
+          Explore the model
+        </a>
+        <a class="btn btn-ghost" href="#workflow" data-i18n="hero.cta.workflow">
+          View the workflow →
+        </a>
+      </div>
+
+      <div class="hero-kpis">
+        <div class="kpi">
+          <span class="kpi-label" data-i18n="hero.kpi1.label">Case 3 — full year</span>
+          <span class="kpi-value" data-i18n="hero.kpi1.value">−33.3<span class="unit">% vs GUDI</span></span>
+        </div>
+        <div class="kpi">
+          <span class="kpi-label" data-i18n="hero.kpi2.label">Expected total cost</span>
+          <span class="kpi-value" data-i18n="hero.kpi2.value">525.4<span class="unit">kUSD / year</span></span>
+        </div>
+        <div class="kpi">
+          <span class="kpi-label" data-i18n="hero.kpi3.label">First-stage PV hedge</span>
+          <span class="kpi-value" data-i18n="hero.kpi3.value">2.29<span class="unit">MW<sub>p</sub></span></span>
+        </div>
+        <div class="kpi">
+          <span class="kpi-label" data-i18n="hero.kpi4.label">MIP gap reported</span>
+          <span class="kpi-value" data-i18n="hero.kpi4.value">0.00<span class="unit">% · 44/44 runs</span></span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================================================== MODEL -->
+  <section class="section" id="model">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow" data-i18n="model.eyebrow">The framework</span>
+        <h2 class="h-section" data-i18n="model.h2">
+          A here-and-now portfolio, a wait-and-see dispatch.
+        </h2>
+        <p class="lede" data-i18n="model.lede">
+          STORM is a two-stage stochastic mixed-integer linear program. The first stage
+          locks in monthly contract volumes <span class="mono cyan">Q<sup>E</sup><sub>k,m</sub></span>,
+          power-adequacy coverage <span class="mono cyan">R<sup>P</sup><sub>m</sub></span>, and
+          installed capacity <span class="mono cyan">C<sup>PV</sup>, C<sup>BESS</sup>, P<sup>BESS</sup></span>
+          before uncertainty is revealed. The second stage dispatches energy, storage, and demand
+          response per scenario across <strong>S</strong> realizations of demand, spot price, PV yield,
+          and tariff parameters.
+        </p>
+      </div>
+
+      <div class="scenario-grid">
+        <div class="scenario-card">
+          <div class="scenario-card-head">
+            <span class="scenario-card-title" data-i18n="model.fan.demand.title">Native demand</span>
+            <span class="scenario-card-unit">D<sub>t,s</sub> · kW</span>
+          </div>
+          <svg class="scenario-svg" id="fan-demand" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid meet"></svg>
+          <div class="scenario-legend">
+            <span><i class="swatch" style="background:var(--cyan)"></i><span data-i18n="model.fan.legend.median">median</span></span>
+            <span><i class="swatch band" style="background:var(--cyan)"></i><span data-i18n="model.fan.legend.band">10–90%</span></span>
+            <span><i class="swatch band" style="background:var(--cyan); opacity:0.18"></i><span data-i18n="model.fan.legend.minmax">min–max</span></span>
+          </div>
+        </div>
+        <div class="scenario-card">
+          <div class="scenario-card-head">
+            <span class="scenario-card-title" data-i18n="model.fan.spot.title">Spot energy price</span>
+            <span class="scenario-card-unit">λ<sup>spot</sup><sub>t,s</sub> · USD/MWh</span>
+          </div>
+          <svg class="scenario-svg" id="fan-spot" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid meet"></svg>
+          <div class="scenario-legend">
+            <span><i class="swatch" style="background:var(--violet)"></i><span data-i18n="model.fan.legend.median">median</span></span>
+            <span><i class="swatch band" style="background:var(--violet)"></i><span data-i18n="model.fan.legend.band">10–90%</span></span>
+            <span><i class="swatch band" style="background:var(--violet); opacity:0.18"></i><span data-i18n="model.fan.legend.minmax">min–max</span></span>
+          </div>
+        </div>
+        <div class="scenario-card">
+          <div class="scenario-card-head">
+            <span class="scenario-card-title" data-i18n="model.fan.pv.title">PV yield</span>
+            <span class="scenario-card-unit">G<sub>t,s</sub> · kWh/kW<sub>p</sub></span>
+          </div>
+          <svg class="scenario-svg" id="fan-pv" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid meet"></svg>
+          <div class="scenario-legend">
+            <span><i class="swatch" style="background:var(--amber)"></i><span data-i18n="model.fan.legend.median">median</span></span>
+            <span><i class="swatch band" style="background:var(--amber)"></i><span data-i18n="model.fan.legend.band">10–90%</span></span>
+            <span><i class="swatch band" style="background:var(--amber); opacity:0.18"></i><span data-i18n="model.fan.legend.minmax">min–max</span></span>
+          </div>
+        </div>
+      </div>
+
+      <p class="muted mono-12" style="margin-top:24px;" data-i18n="model.note">
+        Inputs are stochastic objects, not point forecasts. First-stage variables cannot adapt to
+        a particular realization — they must hedge across the full envelope.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===================================================== MEM CONTEXT -->
+  <section class="section" style="background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow" data-i18n="mem.eyebrow">The Argentine MEM</span>
+        <h2 class="h-section" data-i18n="mem.h2">User cost is a stack, not a price.</h2>
+        <p class="lede" data-i18n="mem.lede">
+          Under Resolución SE 400/2025 the procurement choice reopens for large industrial users.
+          STORM models the cost stack the way the regulator records it — separating energy from
+          power-adequacy, grid services, transport, distribution <em>peaje</em>, and local adders —
+          so contracts and behind-the-meter assets are sized against the exposures they actually hedge.
+        </p>
+      </div>
+
+      <div class="card" style="padding: 28px;">
+        <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:16px; gap:16px; flex-wrap:wrap;">
+          <span class="card-label" style="margin:0;" data-i18n="mem.stack.label">Approximate cost-stack — large industrial user (Case 3, 1.247 MW peak)</span>
+          <span class="mono muted" style="font-size:11px;" data-i18n="mem.stack.source">CAMMESA DTE settlement components</span>
+        </div>
+
+        <div class="coststack">
+          <div class="coststack-seg" style="background: linear-gradient(135deg,#5BD4FF,#4F8BFF); flex: 55;" data-i18n="mem.stack.energy">Energy · 55%</div>
+          <div class="coststack-seg" style="background: linear-gradient(135deg,#FFB454,#FF9243); flex: 18;" data-i18n="mem.stack.ppad">PPAD · 18%</div>
+          <div class="coststack-seg" style="background: linear-gradient(135deg,#B58CFF,#9173FF); flex: 12;" data-i18n="mem.stack.peaje">Peaje · 12%</div>
+          <div class="coststack-seg" style="background: linear-gradient(135deg,#4FE4C1,#3FBFA3); flex: 8;" data-i18n="mem.stack.services">Services · 8%</div>
+          <div class="coststack-seg" style="background: linear-gradient(135deg,#6A7488,#4A5468); flex: 7; color: var(--text-1);" data-i18n="mem.stack.local">Local · 7%</div>
+        </div>
+
+        <div class="coststack-legend">
+          <span><i class="swatch" style="background:#5BD4FF"></i><span data-i18n="mem.legend.energy">Energy — MATER / MATE / spot</span></span>
+          <span><i class="swatch" style="background:#FFB454"></i><span data-i18n="mem.legend.power">Power adequacy — MATP / PPAD</span></span>
+          <span><i class="swatch" style="background:#B58CFF"></i><span data-i18n="mem.legend.peaje">Distribution peaje</span></span>
+          <span><i class="swatch" style="background:#4FE4C1"></i><span data-i18n="mem.legend.services">Grid services + transport</span></span>
+          <span><i class="swatch" style="background:#6A7488"></i><span data-i18n="mem.legend.local">Local tariffs + taxes</span></span>
+        </div>
+      </div>
+
+      <div class="apps-grid" style="margin-top:32px;">
+        <div class="app-card">
+          <div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l3-7h12l3 7M5 12v8h14v-8M9 16h6"/></svg></div>
+          <h3 data-i18n="mem.card.mater.title">MATER</h3>
+          <p data-i18n="mem.card.mater.desc">Renewable energy contract. Bilateral MWh from wind, PV, biomass — long duration, profile-fit, counterparty exposure.</p>
+        </div>
+        <div class="app-card">
+          <div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17l6-6 4 4 8-8M14 7h7v7"/></svg></div>
+          <h3 data-i18n="mem.card.mate.title">MATE</h3>
+          <p data-i18n="mem.card.mate.desc">Energy contract with conventional, hydro, or renewable generators. Monthly take-or-pay / deliver-or-pay commitments.</p>
+        </div>
+        <div class="app-card">
+          <div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v6m0 8v6M5 12H2m20 0h-3M5.6 5.6l2 2m8.8 8.8l2 2M5.6 18.4l2-2m8.8-8.8l2-2"/></svg></div>
+          <h3 data-i18n="mem.card.matp.title">MATP</h3>
+          <p data-i18n="mem.card.matp.desc">Power-adequacy hedge tied to CAMMESA peak-hour requirements. Priced per MW of reserved peak, not per MWh.</p>
+        </div>
+        <div class="app-card">
+          <div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 3"/></svg></div>
+          <h3 data-i18n="mem.card.spot.title">Spot + PPAD</h3>
+          <p data-i18n="mem.card.spot.desc">Residual energy and power settled after contracts and self-supply. PPAD activates only when peak-hour exposure becomes expensive.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== WORKFLOW -->
+  <section class="section" id="workflow">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow" data-i18n="wf.eyebrow">Architecture</span>
+        <h2 class="h-section" data-i18n="wf.h2">A scenario fan in, an investment plan out.</h2>
+        <p class="lede" data-i18n="wf.lede">
+          Inputs define an uncertainty envelope. First-stage decisions are fixed before
+          uncertainty resolves. Second-stage recourse adapts the operation by scenario.
+          The objective penalizes the conditional tail of OPEX via CVaR.
+        </p>
+      </div>
+
+      <div class="workflow">
+        <div class="workflow-flow"></div>
+
+        <div class="workflow-stage" data-step="01">
+          <div class="workflow-stage-label" data-i18n="wf.s1.label">Inputs</div>
+          <h3 data-i18n="wf.s1.title">Scenarios &amp; parameters</h3>
+          <div class="workflow-vars">
+            <div class="workflow-var"><span class="sym">D<sub>t,s</sub></span><span class="desc" data-i18n="wf.s1.v1">demand (kWh)</span></div>
+            <div class="workflow-var"><span class="sym">G<sub>t,s</sub></span><span class="desc" data-i18n="wf.s1.v2">PV yield (kWh / kW<sub>p</sub>)</span></div>
+            <div class="workflow-var"><span class="sym">λ<sup>spot</sup><sub>t,s</sub></span><span class="desc" data-i18n="wf.s1.v3">spot price</span></div>
+            <div class="workflow-var"><span class="sym">c<sup>P,spot</sup><sub>m</sub></span><span class="desc" data-i18n="wf.s1.v4">PPAD adder</span></div>
+            <div class="workflow-var"><span class="sym">γ<sup>PV</sup>, γ<sup>BESS</sup></span><span class="desc" data-i18n="wf.s1.v5">annualized CAPEX</span></div>
+            <div class="workflow-var"><span class="sym">α, β</span><span class="desc" data-i18n="wf.s1.v6">CVaR settings</span></div>
+          </div>
+        </div>
+
+        <div class="workflow-stage" data-step="02">
+          <div class="workflow-stage-label" data-i18n="wf.s2.label">First stage · here-and-now</div>
+          <h3 data-i18n="wf.s2.title">Portfolio &amp; sizing</h3>
+          <div class="workflow-vars">
+            <div class="workflow-var"><span class="sym">Q<sup>E</sup><sub>k,m</sub></span><span class="desc" data-i18n="wf.s2.v1">monthly MATER/MATE volume</span></div>
+            <div class="workflow-var"><span class="sym">R<sup>P</sup><sub>m</sub></span><span class="desc" data-i18n="wf.s2.v2">MATP / PPAD coverage</span></div>
+            <div class="workflow-var"><span class="sym">C<sup>PV</sup></span><span class="desc" data-i18n="wf.s2.v3">PV capacity (kW<sub>p</sub>)</span></div>
+            <div class="workflow-var"><span class="sym">C<sup>BESS</sup></span><span class="desc" data-i18n="wf.s2.v4">BESS energy (kWh)</span></div>
+            <div class="workflow-var"><span class="sym">P<sup>BESS</sup></span><span class="desc" data-i18n="wf.s2.v5">BESS power (kW)</span></div>
+            <div class="workflow-var"><span class="sym muted">∀s : same Q, R, C</span><span class="desc" data-i18n="wf.s2.v6">non-anticipativity</span></div>
+          </div>
+        </div>
+
+        <div class="workflow-stage" data-step="03">
+          <div class="workflow-stage-label" data-i18n="wf.s3.label">Second stage · per scenario</div>
+          <h3 data-i18n="wf.s3.title">Dispatch &amp; recourse</h3>
+          <div class="workflow-vars">
+            <div class="workflow-var"><span class="sym">e<sup>spot</sup><sub>t,s</sub></span><span class="desc" data-i18n="wf.s3.v1">spot energy purchase</span></div>
+            <div class="workflow-var"><span class="sym">e<sup>con</sup><sub>k,t,s</sub></span><span class="desc" data-i18n="wf.s3.v2">contract energy allocation</span></div>
+            <div class="workflow-var"><span class="sym">e<sup>ch</sup>, e<sup>dis</sup>, E<sup>BESS</sup></span><span class="desc" data-i18n="wf.s3.v3">BESS charge / SOC</span></div>
+            <div class="workflow-var"><span class="sym">d<sup>red</sup><sub>t,s</sub></span><span class="desc" data-i18n="wf.s3.v4">demand reduction</span></div>
+            <div class="workflow-var"><span class="sym">r<sup>spotP</sup><sub>m,s</sub></span><span class="desc" data-i18n="wf.s3.v5">residual PPAD</span></div>
+            <div class="workflow-var"><span class="sym">δ<sup>TOP</sup><sub>k,m,s</sub></span><span class="desc" data-i18n="wf.s3.v6">take-or-pay slack</span></div>
+          </div>
+        </div>
+
+        <div class="workflow-stage" data-step="04">
+          <div class="workflow-stage-label" data-i18n="wf.s4.label">Objective</div>
+          <h3 data-i18n="wf.s4.title">Risk-aware optimum</h3>
+          <div class="workflow-vars">
+            <div class="workflow-var"><span class="sym">𝒞<sup>CAPEX</sup></span><span class="desc" data-i18n="wf.s4.v1">annualized investment</span></div>
+            <div class="workflow-var"><span class="sym">𝔼[𝒞<sup>OPEX</sup><sub>s</sub>]</span><span class="desc" data-i18n="wf.s4.v2">expected operation cost</span></div>
+            <div class="workflow-var"><span class="sym">β · CVaR<sub>α</sub></span><span class="desc" data-i18n="wf.s4.v3">tail-risk penalty</span></div>
+            <div class="workflow-var"><span class="sym cyan">→ STORM-RN</span><span class="desc" data-i18n="wf.s4.v4">β = 0 · risk-neutral</span></div>
+            <div class="workflow-var"><span class="sym cyan">→ STORM-CVaR</span><span class="desc" data-i18n="wf.s4.v5">β &gt; 0 · risk-averse</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== CODE + OUTPUT -->
+  <section class="section" id="code">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow" data-i18n="code.eyebrow">Implementation</span>
+        <h2 class="h-section" data-i18n="code.h2">Build the program. Solve the fan.</h2>
+        <p class="lede" data-i18n="code.lede">
+          STORM is implemented in Python on top of Gurobi. The first-stage variables are declared
+          outside the scenario loop so non-anticipativity is enforced structurally. The second
+          stage indexes everything by <span class="mono cyan">(t, s)</span> over T = 35,040 intervals
+          and S scenarios — solved at root with a reported MIP gap of zero in the headline campaign.
+        </p>
+      </div>
+
+      <div class="codeblock-wrap">
+        <div class="codeblock">
+          <div class="codeblock-head">
+            <span class="dots"><i></i><i></i><i></i></span>
+            <span>storm / model_milp.py</span>
+            <span style="color:var(--cyan);">Gurobi 11</span>
+          </div>
+          <pre class="codeblock-body"><span class="kw">import</span> gurobipy <span class="kw">as</span> gp
+<span class="kw">from</span> gurobipy <span class="kw">import</span> GRB
+<span class="kw">from</span> storm <span class="kw">import</span> config <span class="kw">as</span> cfg
+<span class="kw">from</span> storm.scenario_gen <span class="kw">import</span> build_scenarios
+
+<span class="com"># 12 scenarios × 35,040 intervals (15-min, 365 d)</span>
+scenarios = <span class="fn">build_scenarios</span>(
+    demand    = <span class="fn">load_case</span>(<span class="str">"case3"</span>),
+    horizon   = cfg.YEAR_HOURS,
+    interval  = cfg.DELTA_T,
+    n         = <span class="num">12</span>,
+    seed      = <span class="num">2026</span>,
+)
+
+m = gp.<span class="fn">Model</span>(<span class="str">"storm"</span>)
+
+<span class="com"># ── First stage: here-and-now ──</span>
+<span class="var">Q_MATER</span> = m.<span class="fn">addVars</span>(M, lb=<span class="num">0</span>, name=<span class="str">"Q_MATER"</span>)
+<span class="var">Q_MATE</span>  = m.<span class="fn">addVars</span>(M, lb=<span class="num">0</span>, name=<span class="str">"Q_MATE"</span>)
+<span class="var">R_MATP</span>  = m.<span class="fn">addVars</span>(M, lb=<span class="num">0</span>, name=<span class="str">"R_MATP"</span>)
+<span class="var">C_PV</span>    = m.<span class="fn">addVar</span>(lb=<span class="num">0</span>,  name=<span class="str">"C_PV"</span>)
+<span class="var">C_BESS</span>  = m.<span class="fn">addVar</span>(lb=<span class="num">0</span>,  name=<span class="str">"C_BESS"</span>)
+<span class="var">P_BESS</span>  = m.<span class="fn">addVar</span>(lb=<span class="num">0</span>,  name=<span class="str">"P_BESS"</span>)
+
+<span class="com"># ── Second stage: per-scenario recourse ──</span>
+<span class="var">e_spot</span>  = m.<span class="fn">addVars</span>(T, S, lb=<span class="num">0</span>)
+<span class="var">e_con</span>   = m.<span class="fn">addVars</span>(K, T, S, lb=<span class="num">0</span>)
+<span class="var">E_BESS</span>  = m.<span class="fn">addVars</span>(T, S, lb=<span class="num">0</span>)
+<span class="var">d_red</span>   = m.<span class="fn">addVars</span>(T, S, lb=<span class="num">0</span>)
+<span class="var">r_spotP</span> = m.<span class="fn">addVars</span>(M, S, lb=<span class="num">0</span>)
+<span class="var">y</span>       = m.<span class="fn">addVars</span>(T, S, vtype=GRB.<span class="sym">BINARY</span>)  <span class="com"># 1 if charging</span>
+
+<span class="com"># Objective: annualized CAPEX + E[OPEX] + β · CVaR_α(OPEX)</span>
+capex = γ_PV*<span class="var">C_PV</span> + γ_BESS*<span class="var">C_BESS</span> + γ_P*<span class="var">P_BESS</span>
+opex  = (<span class="num">1</span>/S) * gp.<span class="fn">quicksum</span>(opex_s[s] <span class="kw">for</span> s <span class="kw">in</span> S_set)
+cvar  = η + (<span class="num">1</span>/((<span class="num">1</span>-α)*S)) * gp.<span class="fn">quicksum</span>(ζ[s] <span class="kw">for</span> s <span class="kw">in</span> S_set)
+
+m.<span class="fn">setObjective</span>(capex + opex + β*cvar, GRB.MINIMIZE)
+m.<span class="fn">optimize</span>()  <span class="com"># MIP gap target 2% · reported 0.00%</span></pre>
+        </div>
+
+        <div class="output-panel">
+          <div class="output-head">
+            <h4 data-i18n="code.output.title">CVaR risk-aversion sweep — Case 3</h4>
+            <span class="badge" data-i18n="code.output.badge">β ∈ [0, 2]</span>
+          </div>
+
+          <svg id="cvar-chart" viewBox="0 0 420 240" preserveAspectRatio="xMidYMid meet" style="margin-bottom:8px;"></svg>
+
+          <div class="output-foot">
+            <div class="output-stat">
+              <span class="lbl" data-i18n="code.output.pvLabel">PV @ β=2</span>
+              <span class="val">3.06<span class="delta" data-i18n="code.output.pvDelta">+65%</span></span>
+            </div>
+            <div class="output-stat">
+              <span class="lbl" data-i18n="code.output.bessLabel">BESS @ β=2</span>
+              <span class="val">0.40<span class="delta" data-i18n="code.output.bessUnit">MWh</span></span>
+            </div>
+            <div class="output-stat">
+              <span class="lbl" data-i18n="code.output.mateLabel">MATE energy</span>
+              <span class="val">1.75<span class="delta warn" data-i18n="code.output.mateDelta">−16%</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="muted mono-12" style="margin-top:24px;" data-i18n="code.note">
+        Source: full-year Case 3 campaign. Increasing β shifts the first-stage portfolio
+        toward physical hedges (PV, BESS) and reduces MATE energy commitments and MATP coverage.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===================================================== FOUNDATIONS -->
+  <section class="section" id="foundations" style="background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow" data-i18n="found.eyebrow">Scientific foundation</span>
+        <h2 class="h-section" data-i18n="found.h2">CAPEX is deterministic. OPEX is a distribution.</h2>
+        <p class="lede" data-i18n="found.lede">
+          The objective has three layers: annualized capital cost on first-stage assets,
+          the expected operating cost across scenarios, and the conditional value-at-risk
+          of the OPEX tail. CAPEX does not affect the ordering of scenarios — only the
+          OPEX distribution enters the tail-risk term.
+        </p>
+      </div>
+
+      <div class="eq-grid">
+        <div class="eq-card">
+          <span class="eq-label" data-i18n="found.eq1.label">Eq. 4 · Objective</span>
+          <div class="eq-title" data-i18n="found.eq1.title">Annualized cost with CVaR penalty</div>
+          <div class="eq-body" data-katex>
+            \min \; \mathcal{C}^{\text{CAPEX}} + \frac{1}{S}\sum_{s \in \mathcal{S}} \mathcal{C}^{\text{OPEX}}_{s} + \beta \cdot \mathrm{CVaR}_{\alpha}
+          </div>
+          <p class="eq-note" data-i18n="found.eq1.note">
+            β controls risk aversion. β = 0 yields <span class="cyan">STORM-RN</span>,
+            the risk-neutral expected-cost optimizer. Larger β shifts the portfolio toward
+            conservative hedges — defining <span class="cyan">STORM-CVaR</span>.
+          </p>
+        </div>
+
+        <div class="eq-card">
+          <span class="eq-label" data-i18n="found.eq2.label">Eq. 5–6 · CVaR</span>
+          <div class="eq-title" data-i18n="found.eq2.title">Tail expectation via auxiliary slacks</div>
+          <div class="eq-body" data-katex>
+            \mathrm{CVaR}_{\alpha} = \eta + \frac{1}{(1-\alpha)\,S}\sum_{s \in \mathcal{S}} \zeta_s,\quad \mathcal{C}^{\text{OPEX}}_{s} - \eta \le \zeta_s,\; \zeta_s \ge 0
+          </div>
+          <p class="eq-note" data-i18n="found.eq2.note">
+            Rockafellar–Uryasev representation. With α = 0.95 the term penalizes the worst
+            5% of scenario OPEX outcomes, independent of CAPEX.
+          </p>
+        </div>
+
+        <div class="eq-card">
+          <span class="eq-label" data-i18n="found.eq3.label">Eq. 7 · Energy balance</span>
+          <div class="eq-title" data-i18n="found.eq3.title">Site equilibrium per interval, per scenario</div>
+          <div class="eq-body" data-katex>
+            e^{\text{spot}}_{t,s} + \sum_{k \in \mathcal{K}^E} e^{\text{con}}_{k,t,s} + e^{\text{PV}}_{t,s} + e^{\text{dis}}_{t,s} + d^{\text{red}}_{t,s} = D_{t,s} + e^{\text{ch}}_{t,s}
+          </div>
+          <p class="eq-note" data-i18n="found.eq3.note">
+            Supply from grid spot, MEM contracts, PV self-consumption, BESS discharge, and
+            curtailed demand must equal native load plus charging energy at every (t, s).
+          </p>
+        </div>
+
+        <div class="eq-card">
+          <span class="eq-label" data-i18n="found.eq4.label">Eq. 11, 15 · BESS</span>
+          <div class="eq-title" data-i18n="found.eq4.title">State-of-charge dynamics with SOC window</div>
+          <div class="eq-body" data-katex>
+            E^{\text{BESS}}_{t,s} = E^{\text{BESS}}_{t-1,s} + \eta^{\text{ch}} e^{\text{ch}}_{t,s} - \tfrac{e^{\text{dis}}_{t,s}}{\eta^{\text{dis}}},\quad \mathrm{SOC}^{\min} C^{\text{BESS}} \le E^{\text{BESS}}_{t,s} \le \mathrm{SOC}^{\max} C^{\text{BESS}}
+          </div>
+          <p class="eq-note" data-i18n="found.eq4.note">
+            Storage operating bounds are linear in the first-stage energy capacity. A linear
+            discharge-throughput penalty captures the first-order economic cost of cycling.
+          </p>
+        </div>
+
+        <div class="eq-card">
+          <span class="eq-label" data-i18n="found.eq5.label">Eq. 17–18 · PPAD</span>
+          <div class="eq-title" data-i18n="found.eq5.title">Power-adequacy exposure on peak intervals</div>
+          <div class="eq-body" data-katex>
+            r^{\text{PPAD}}_{m,s} \ge \frac{e^{\text{grid}}_{t,s}}{\Delta t},\; \forall t \in \mathcal{H}_m,\quad r^{\text{spotP}}_{m,s} \ge r^{\text{PPAD}}_{m,s} - R^{P}_{m}
+          </div>
+          <p class="eq-note" data-i18n="found.eq5.note">
+            Chargeable peak power is the maximum grid import during the regulated peak-hour
+            window. MATP coverage absorbs it; the remainder is paid at the residual PPAD rate.
+          </p>
+        </div>
+
+        <div class="eq-card">
+          <span class="eq-label" data-i18n="found.eq6.label">Eq. 8–9 · Take-or-pay</span>
+          <div class="eq-title" data-i18n="found.eq6.title">Monthly contract commitment with TOP slack</div>
+          <div class="eq-body" data-katex>
+            \sum_{t:\, m(t)=m} e^{\text{con}}_{k,t,s} + \delta^{\text{TOP}}_{k,m,s} \ge Q^{E}_{k,m},\quad \sum_{t:\, m(t)=m} e^{\text{con}}_{k,t,s} \le Q^{E}_{k,m}
+          </div>
+          <p class="eq-note" data-i18n="found.eq6.note">
+            Unilateral departure from the monthly commitment is priced at the take-or-pay
+            penalty c<sup>TOP</sup><sub>k</sub> · δ<sup>TOP</sup>. Setting c<sup>TOP</sup>=0 recovers the pure
+            commitment-cost formulation.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== RESULTS -->
+  <section class="section" id="results">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow" data-i18n="res.eyebrow">Numerical campaign · Case 3 · 365 days</span>
+        <h2 class="h-section" data-i18n="res.h2">The joint feasible set wins.</h2>
+        <p class="lede" data-i18n="res.lede">
+          Evaluated on the same 12-scenario fan, STORM beats every single-channel ablation:
+          contracts-only and DER-only are both materially worse than co-optimizing the two.
+          CVaR-aware first-stage decisions trade a modest expected-cost premium for a
+          measurably tighter tail.
+        </p>
+      </div>
+
+      <div class="results-grid">
+        <div class="card" style="padding: 24px;">
+          <h3 style="font-size:16px; margin-bottom:16px;" data-i18n="res.barCardTitle">Baseline comparison · annual cost</h3>
+          <svg id="results-bars" viewBox="0 0 520 320" preserveAspectRatio="xMidYMid meet" style="width:100%; height:auto;"></svg>
+          <p class="muted mono-12" style="margin-top:14px;" data-i18n="res.barCardNote">
+            kUSD / year · expected total cost (dark) and empirical CVaR<sub>95%</sub> (cyan band).
+            Bars drawn from Table II of the paper.
+          </p>
+        </div>
+
+        <div class="card" style="padding: 24px;">
+          <h3 style="font-size:16px; margin-bottom:16px;" data-i18n="res.tableCardTitle">Strategy summary</h3>
+          <table class="results-table">
+            <thead>
+              <tr>
+                <th data-i18n="res.th.strategy">Strategy</th>
+                <th>E[total]</th>
+                <th>CVaR<sub>95</sub></th>
+                <th>PV</th>
+                <th>BESS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td data-i18n="res.row.gudi">GUDI full service</td><td>779.7</td><td>779.9</td><td>0.00</td><td>0.000</td></tr>
+              <tr><td data-i18n="res.row.detEV">Deterministic EV</td><td>520.7</td><td>521.7</td><td>1.86</td><td>0.000</td></tr>
+              <tr class="highlight"><td>STORM-RN (β=0)</td><td>520.4</td><td>520.7</td><td>1.86</td><td>0.000</td></tr>
+              <tr class="highlight"><td>STORM-CVaR (β=0.5)</td><td>525.4</td><td>525.6</td><td>2.29</td><td>0.000</td></tr>
+              <tr><td data-i18n="res.row.contracts">Contracts-only</td><td>626.7</td><td>626.7</td><td>0.00</td><td>0.000</td></tr>
+              <tr><td data-i18n="res.row.derOnly">DER-only</td><td>551.0</td><td>551.2</td><td>2.33</td><td>0.000</td></tr>
+              <tr><td data-i18n="res.row.noDeg">STORM-CVaR · no deg.</td><td>525.5</td><td>525.8</td><td>2.29</td><td>0.006</td></tr>
+            </tbody>
+          </table>
+          <p class="muted mono-12" style="margin-top:14px;" data-i18n="res.tableCardNote">
+            Costs in kUSD/year. Capacities in MW<sub>p</sub> (PV) and MWh (BESS). MIP gap = 0% on all non-GUDI runs.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== APPLICATIONS -->
+  <section class="section" id="applications">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow" data-i18n="apps.eyebrow">Applications</span>
+        <h2 class="h-section" data-i18n="apps.h2">Where STORM-class decisions live.</h2>
+        <p class="lede" data-i18n="apps.lede">
+          The same two-stage structure generalizes well beyond the Case 3 logistics center:
+          any industrial-scale procurement decision exposed to layered regulatory cost stacks
+          and operational uncertainty admits the same framing.
+        </p>
+      </div>
+
+      <div class="apps-grid">
+        <div class="app-card">
+          <div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 14h6M9 18h6"/></svg></div>
+          <h3 data-i18n="apps.c1.title">Industrial procurement</h3>
+          <p data-i18n="apps.c1.desc">Migration analysis from GUDI to GUMA / GUME for users with mixed schedules and seasonal load profiles.</p>
+        </div>
+        <div class="app-card">
+          <div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3M5 5l2 2m10 10l2 2M5 19l2-2m10-10l2-2"/></svg></div>
+          <h3 data-i18n="apps.c2.title">PV + BESS sizing</h3>
+          <p data-i18n="apps.c2.desc">Joint sizing of behind-the-meter generation and storage against price, demand, and irradiance scenarios.</p>
+        </div>
+        <div class="app-card">
+          <div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18M7 16l4-4 3 3 5-6"/></svg></div>
+          <h3 data-i18n="apps.c3.title">Contract portfolio design</h3>
+          <p data-i18n="apps.c3.desc">Optimal monthly volume across MATER, MATE, MATP — with take-or-pay structures explicit in the formulation.</p>
+        </div>
+        <div class="app-card">
+          <div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12c4-8 14-8 18 0M3 12c4 8 14 8 18 0"/><circle cx="12" cy="12" r="2"/></svg></div>
+          <h3 data-i18n="apps.c4.title">Tail-risk hedging</h3>
+          <p data-i18n="apps.c4.desc">CVaR-aware first-stage decisions for buyers required to demonstrate cost-stability under regulatory volatility.</p>
+        </div>
+        <div class="app-card">
+          <div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20l8-16 8 16H4z"/><path d="M8 14h8"/></svg></div>
+          <h3 data-i18n="apps.c5.title">Peak-shaving valuation</h3>
+          <p data-i18n="apps.c5.desc">Quantify when BESS substitutes for MATP power coverage as a function of installed storage cost.</p>
+        </div>
+        <div class="app-card">
+          <div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 10v4M11 10v4M15 10v4M19 10v4"/></svg></div>
+          <h3 data-i18n="apps.c6.title">Demand-response programs</h3>
+          <p data-i18n="apps.c6.desc">Value voluntary load reduction under SE 379/2025 caps against full-year scenario distributions.</p>
+        </div>
+        <div class="app-card">
+          <div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l9 4v6c0 5-4 9-9 10-5-1-9-5-9-10V6l9-4z"/></svg></div>
+          <h3 data-i18n="apps.c7.title">Regulatory transition</h3>
+          <p data-i18n="apps.c7.desc">Side-by-side baseline vs. post-Resolution scenarios — measure migration value beyond aggregate tariff numbers.</p>
+        </div>
+        <div class="app-card">
+          <div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/><path d="M10 7h4M10 17h4M7 10v4M17 10v4"/></svg></div>
+          <h3 data-i18n="apps.c8.title">Scenario-based planning</h3>
+          <p data-i18n="apps.c8.desc">Plug in any source of structured uncertainty — hydrology, fuel, FSA transition path — without rewriting the model.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== FINAL CTA -->
+  <section class="final-cta" id="read">
+    <div class="container">
+      <h2 data-i18n="cta.h2">
+        Engineering optimization <span class="gradient">under uncertainty.</span>
+      </h2>
+      <p class="lede" style="margin: 0 auto 32px; text-align: center;" data-i18n="cta.lede">
+        A two-stage stochastic MILP for procurement and DER sizing under the
+        Argentine MEM normalization process — open implementation, reproducible
+        campaign, anonymized for review.
+      </p>
+      <div class="ctas">
+        <a class="btn btn-primary" href="#top">
+          <span data-i18n="cta.read">Read the manuscript</span>
+          <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+        <a class="btn btn-secondary" href="#code" data-i18n="cta.code">View the implementation</a>
+        <a class="btn btn-secondary" href="#results" data-i18n="cta.results">Inspect the campaign</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-row">
+        <div class="footer-brand">
+          <img src="assets/mark.svg" alt="" />
+          <div>
+            <div style="color:var(--text-1); font-family:var(--display); font-weight:600; letter-spacing:0.18em;">STORM</div>
+            <div style="font-size:11px; letter-spacing:0.06em;">Stochastic Trading and Optimization under Regulation · MEM</div>
+          </div>
+        </div>
+        <div style="display:flex; gap:32px; flex-wrap:wrap;">
+          <div>
+            <div class="mono-12" style="color:var(--text-2); margin-bottom:6px;" data-i18n="foot.affiliation">Affiliation</div>
+            <div>CONICET — Universidad Nacional de Córdoba</div>
+            <div>Inria · INSA Lyon · CITI · UR3720</div>
+          </div>
+          <div>
+            <div class="mono-12" style="color:var(--text-2); margin-bottom:6px;" data-i18n="foot.stack">Solver / stack</div>
+            <div>Python · Gurobi 11 · NumPy / Pandas</div>
+            <div>IEEEtran manuscript · LaTeX</div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-meta">
+        <span data-i18n="foot.indexTerms">Index Terms — Stochastic optimization · MILP · BESS · MEM · MATER · MATE · MATP · CVaR · large industrial users</span>
+        <span data-i18n="foot.copy">© 2025 · Anonymized for double-blind review</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- KaTeX auto-render -->
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg" crossorigin="anonymous"></script>
+  <!-- i18n MUST load before app.js so chart labels see the right language -->
+  <script src="i18n.js" defer></script>
+  <script src="app.js" defer></script>
+</body>
+</html>

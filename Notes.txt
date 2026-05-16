@@ -1,0 +1,364 @@
+
+
+
+
+
+
+
+
+
+------------------------------------------------------
+------------------------------------------------------
+
+You are designing the complete visual identity, UX direction, and landing page for a deep-tech research platform called STORM.
+
+You have access to:
+- main.pdf
+- main.tex
+
+These files contain the scientific paper describing the STORM framework, its mathematical foundations, techno-economic modeling, stochastic optimization approach, energy-market assumptions, and overall system architecture.
+
+You MUST carefully extract:
+- the scientific concepts,
+- terminology,
+- optimization goals,
+- system architecture,
+- variables,
+- modeling philosophy,
+- energy-market context,
+- battery and renewable integration concepts,
+- stochastic aspects,
+- visualizable structures,
+- and computational workflows
+
+from the paper itself.
+
+The generated design and website MUST feel deeply grounded in the actual scientific framework described in the paper — not like a generic startup landing page.
+
+---------------------------------------------------
+BIG PICTURE
+---------------------------------------------------
+
+STORM is NOT:
+- a generic consulting company
+- a weather application
+- a sustainability NGO
+- a solar installer
+
+STORM IS:
+- a computational intelligence framework
+- an AI-driven techno-economic optimization platform
+- a scientific modeling environment
+- an infrastructure intelligence system
+- an energy systems optimization engine
+
+The project sits at the intersection of:
+- applied computer science
+- artificial intelligence
+- stochastic optimization
+- energy economics
+- renewable energy systems
+- infrastructure planning
+- scientific computing
+- decision intelligence
+
+The aesthetic should feel like a fusion of:
+- Palantir
+- DeepMind
+- Bloomberg Terminal
+- Stripe
+- Linear
+- scientific computing platforms
+- quantitative finance systems
+- advanced infrastructure AI
+
+---------------------------------------------------
+GOAL
+---------------------------------------------------
+
+Create:
+1. A world-class logo and visual identity
+2. A futuristic one-page landing page
+3. A coherent design language
+4. A color palette
+5. UI foundations for future dashboards and Python interfaces
+6. A scientific but premium deep-tech aesthetic
+
+The branding must later support:
+- scientific papers
+- interactive simulations
+- Python notebooks
+- optimization dashboards
+- stochastic scenario visualization
+- battery and market simulations
+- real-time plotting
+- AI-driven analytics
+- infrastructure digital twins
+
+---------------------------------------------------
+VISUAL PHILOSOPHY
+---------------------------------------------------
+
+Core concepts to visually express:
+- optimization under uncertainty
+- controlled complexity
+- intelligence emerging from dynamic systems
+- stochastic energy systems
+- energy flow
+- forecasting
+- probabilistic reasoning
+- infrastructure intelligence
+- mathematical elegance
+- system-level coordination
+- computational decision-making
+
+The design should feel:
+- intelligent
+- computational
+- scientific
+- elegant
+- modern
+- premium
+- slightly cinematic
+- minimal but dense
+
+Avoid:
+- sustainability clichés
+- cartoon energy imagery
+- generic lightning bolts
+- literal storms or hurricanes
+- “green startup” aesthetics
+- excessive cyberpunk
+- noisy sci-fi interfaces
+
+---------------------------------------------------
+LOGO DIRECTION
+---------------------------------------------------
+
+The STORM logo should:
+- be iconic and minimal
+- work as favicon/app icon
+- scale to papers and dashboards
+- support dark mode beautifully
+- visually encode:
+  - stochastic flow
+  - vector fields
+  - optimization
+  - energy networks
+  - topology
+  - dynamic systems
+  - probabilistic structures
+
+Possible inspirations:
+- abstract flow fields
+- contour lines
+- optimization landscapes
+- energy streams
+- topology graphs
+- mathematical attractors
+- probabilistic wavefronts
+- dynamic vector geometry
+
+Typography:
+- geometric sans-serif
+- premium deep-tech
+- modern scientific computing aesthetic
+
+---------------------------------------------------
+COLOR PALETTE
+---------------------------------------------------
+
+PRIMARY:
+- deep midnight blue
+- graphite black
+- electric cyan
+- storm blue
+
+SECONDARY:
+- teal glow
+- soft violet accents
+- silver-gray highlights
+
+The palette must:
+- support dark-mode-first UI
+- look excellent in dashboards
+- work for plots/charts
+- support syntax-highlighted Python code
+- enable beautiful interactive scientific visualizations
+
+---------------------------------------------------
+LANDING PAGE STRUCTURE
+---------------------------------------------------
+
+The landing page should be a visually stunning single-page experience.
+
+---------------------------------------------------
+1. HERO SECTION
+---------------------------------------------------
+
+Large animated STORM logo and title.
+
+Potential taglines:
+- “AI-Driven Energy Intelligence”
+- “Optimization Under Uncertainty”
+- “Computational Intelligence for Energy Systems”
+- “Stochastic Techno-Economic Optimization”
+
+Background:
+- animated topology lines
+- probabilistic flow fields
+- subtle particle systems
+- dynamic grids
+- energy-flow trajectories
+
+CTA buttons:
+- Launch Simulation
+- Explore the Model
+- Read the Paper
+- View Code
+
+---------------------------------------------------
+2. LIVE SYSTEM VISUALIZATION
+---------------------------------------------------
+
+Create animated scientific visualizations inspired by the actual paper.
+
+Possible components:
+- stochastic energy dispatch
+- battery optimization
+- renewable production scenarios
+- energy market curves
+- Monte Carlo trajectories
+- optimization convergence
+- grid topology
+- heatmaps
+- energy-flow animations
+
+The visuals should look:
+- scientific
+- interactive
+- computational
+- premium
+
+---------------------------------------------------
+3. CODE + OUTPUT SECTION
+---------------------------------------------------
+
+A split-screen section:
+
+LEFT:
+- beautiful embedded Python editor
+- syntax-highlighted STORM optimization code
+- realistic snippets inspired by the paper
+
+RIGHT:
+- live charts
+- optimization outputs
+- scenario comparisons
+- LCOE curves
+- dispatch schedules
+- battery state evolution
+- market price curves
+
+This section should feel like:
+- JupyterLab
+- VSCode
+- ObservableHQ
+- modern scientific computing UI
+
+---------------------------------------------------
+4. ARCHITECTURE SECTION
+---------------------------------------------------
+
+Animated system diagram derived from the paper:
+- data ingestion
+- forecasting
+- optimization engine
+- scenario evaluation
+- AI integration
+- economic evaluation
+- decision support
+
+The diagrams should feel:
+- elegant
+- minimal
+- scientific
+- infrastructure-grade
+
+---------------------------------------------------
+5. APPLICATIONS SECTION
+---------------------------------------------------
+
+Cards or panels:
+- Electricity Markets
+- Renewable Planning
+- Battery Arbitrage
+- Grid Optimization
+- Infrastructure Planning
+- Policy Simulation
+- Energy Transition Analysis
+- AI-Assisted Forecasting
+
+---------------------------------------------------
+6. SCIENTIFIC FOUNDATION
+---------------------------------------------------
+
+Elegant section presenting:
+- equations
+- optimization concepts
+- stochastic methodology
+- references
+- system assumptions
+- computational approach
+
+IMPORTANT:
+The page should subtly communicate scientific credibility without becoming visually academic or cluttered.
+
+---------------------------------------------------
+7. FINAL CTA
+---------------------------------------------------
+
+The ending should feel visionary and infrastructure-scale.
+
+Examples:
+- “Build Intelligent Energy Systems.”
+- “Engineering Optimization Under Uncertainty.”
+- “The Future of Computational Energy Intelligence.”
+
+---------------------------------------------------
+TECHNICAL STYLE
+---------------------------------------------------
+
+Use the aesthetic and implementation style of:
+- React + Tailwind
+- Framer Motion
+- modern dashboard systems
+- scientific visualization platforms
+
+The page should feel:
+- fluid
+- responsive
+- alive
+- computationally sophisticated
+
+Animations:
+- smooth
+- physically inspired
+- subtle
+- premium
+
+---------------------------------------------------
+IMPORTANT
+---------------------------------------------------
+
+The final output should feel like:
+“A next-generation scientific AI platform for intelligent energy system optimization.”
+
+NOT:
+- a consulting website
+- a SaaS template
+- a climate NGO page
+- a crypto dashboard
+- a generic AI startup
+
+Ground all visuals, concepts, diagrams, and interactions in the actual content of main.pdf and main.tex.
