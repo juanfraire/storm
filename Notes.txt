@@ -1,14 +1,9 @@
-
+------------------------------------------------------
 Web:
 https://juanfraire.github.io/storm/
 Repo:
 https://github.com/juanfraire/storm
-
-
-In mobile 
-
-
-
+------------------------------------------------------
 
 - Check the spanish terms to corresponds to those used in ucema Spanish material.
 
