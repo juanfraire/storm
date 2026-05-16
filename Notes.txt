@@ -4,7 +4,7 @@ https://juanfraire.github.io/storm/
 Repo:
 https://github.com/juanfraire/storm
 
-- Logo
+- Can you help me workout the logo in mark.svg? The design is quite naive and simple. Can you propose more professional alternatives?
 
 
 
