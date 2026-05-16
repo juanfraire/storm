@@ -1,9 +1,16 @@
 
-https://github.com/juanfraire/storm-website
+Web:
+https://juanfraire.github.io/storm/
+Repo:
+https://github.com/juanfraire/storm
 
+- Logo
 
+- I want Spanish (ES) to be default the first time we access the website.
+- I want that once you switch ES/EN the landing page scrolls atomatically up alone.
+- Some argentinian touches like the flag or the color of the flag...
 
-
+- Check the spanish terms to corresponds to those used in ucema Spanish material.
 
 
 

@@ -60,11 +60,24 @@
   function initHeroCanvas() {
     const canvas = document.getElementById('hero-canvas');
     if (!canvas) return;
+
+    // respect reduced-motion preferences
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) {
+      // static fill — avoids burn-in and respects user preference
+      const ctx = canvas.getContext('2d', { alpha: true });
+      canvas.classList.add('reduced-motion');
+      // will be filled by resize
+      return;
+    }
+
     const ctx = canvas.getContext('2d', { alpha: true });
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     let W = 0, H = 0;
     let particles = [];
     const N = 220;
+    let running = false;
+    let rafId = null;
 
     function resize() {
       const r = canvas.getBoundingClientRect();
@@ -96,6 +109,7 @@
 
     let t = 0;
     function step() {
+      if (!running) return;
       // fade previous frame — creates trails
       ctx.fillStyle = 'rgba(5, 8, 16, 0.10)';
       ctx.fillRect(0, 0, W, H);
@@ -127,13 +141,27 @@
         ctx.arc(p.x, p.y, 1.2, 0, TAU);
         ctx.fill();
       }
-      requestAnimationFrame(step);
+      rafId = requestAnimationFrame(step);
     }
+
+    // pause when off-screen
+    const visObs = new IntersectionObserver((entries) => {
+      const entry = entries[0];
+      if (entry.isIntersecting) {
+        running = true;
+        rafId = requestAnimationFrame(step);
+      } else {
+        running = false;
+        if (rafId) cancelAnimationFrame(rafId);
+      }
+    }, { threshold: 0.05 });
+    visObs.observe(canvas);
 
     const onResize = () => resize();
     window.addEventListener('resize', onResize, { passive: true });
     resize();
-    requestAnimationFrame(step);
+    running = true;
+    rafId = requestAnimationFrame(step);
   }
 
   /* ────────────────────────── SCENARIO FANS ───────────────────────── */
@@ -435,6 +463,43 @@
       svg.appendChild(t);
     });
 
+    // Tooltip group
+    const tooltipG = el('g', { class: 'chart-tooltip-group' });
+    const tooltipRect = el('rect', { class: 'chart-tooltip-rect', x: 0, y: 0, width: 1, height: 1 });
+    const tooltipTextL1 = el('text', { class: 'chart-tooltip-text', x: 0, y: 0 });
+    const tooltipTextL2 = el('text', { class: 'chart-tooltip-text', x: 0, y: 0 });
+    const tooltipTextL3 = el('text', { class: 'chart-tooltip-text', x: 0, y: 0 });
+    tooltipG.append(tooltipRect, tooltipTextL1, tooltipTextL2, tooltipTextL3);
+    svg.appendChild(tooltipG);
+
+    function showTooltip(i, x, y) {
+      const lines = [
+        `β = ${beta[i]}`,
+        `Cost: ${cost[i].toFixed(1)} kUSD/y`,
+        `PV: ${pv[i].toFixed(2)} MWp   BESS: ${bessMWh[i].toFixed(2)} MWh`,
+      ];
+      const tw = 180, th = 58, tx = clamp(x - tw / 2, padL + 4, padL + innerW - tw - 4), ty = clamp(y - th - 10, padT + 4, padT + innerH - th - 4);
+      tooltipRect.setAttribute('x', tx); tooltipRect.setAttribute('y', ty);
+      tooltipRect.setAttribute('width', tw); tooltipRect.setAttribute('height', th);
+      tooltipTextL1.setAttribute('x', tx + 10); tooltipTextL1.setAttribute('y', ty + 18);
+      tooltipTextL1.textContent = lines[0];
+      tooltipTextL2.setAttribute('x', tx + 10); tooltipTextL2.setAttribute('y', ty + 34);
+      tooltipTextL2.textContent = lines[1];
+      tooltipTextL3.setAttribute('x', tx + 10); tooltipTextL3.setAttribute('y', ty + 50);
+      tooltipTextL3.textContent = lines[2];
+      tooltipG.classList.add('active');
+    }
+    function hideTooltip() { tooltipG.classList.remove('active'); }
+
+    // hit areas for each data point
+    beta.forEach((b, i) => {
+      const hx = xS(b), hy = yL(cost[i]);
+      const hit = el('circle', { cx: hx, cy: hy, r: 12, fill: 'transparent', style: 'cursor:pointer' });
+      hit.addEventListener('mouseenter', () => showTooltip(i, hx, hy));
+      hit.addEventListener('mouseleave', hideTooltip);
+      svg.appendChild(hit);
+    });
+
     // border
     svg.appendChild(el('rect', {
       x: padL, y: padT, width: innerW, height: innerH,
@@ -447,13 +512,13 @@
     const svg = document.getElementById('results-bars');
     if (!svg) return;
     const rows = [
-      { label: tr('chart.bar.gudi'),       expected: 779.7, cvar: 779.9, hl: false },
-      { label: tr('chart.bar.detEV'),      expected: 520.7, cvar: 521.7, hl: false },
-      { label: tr('chart.bar.stormRN'),    expected: 520.4, cvar: 520.7, hl: true },
-      { label: tr('chart.bar.stormCVaR'),  expected: 525.4, cvar: 525.6, hl: true },
-      { label: tr('chart.bar.contracts'),  expected: 626.7, cvar: 626.7, hl: false },
-      { label: tr('chart.bar.derOnly'),    expected: 551.0, cvar: 551.2, hl: false },
-      { label: tr('chart.bar.noDeg'),      expected: 525.5, cvar: 525.8, hl: false },
+      { key: 'gudi',   label: tr('chart.bar.gudi'),       expected: 779.7, cvar: 779.9, hl: false },
+      { key: 'detEV',  label: tr('chart.bar.detEV'),      expected: 520.7, cvar: 521.7, hl: false },
+      { key: 'stormRN', label: tr('chart.bar.stormRN'),    expected: 520.4, cvar: 520.7, hl: true },
+      { key: 'stormCVaR', label: tr('chart.bar.stormCVaR'),  expected: 525.4, cvar: 525.6, hl: true },
+      { key: 'contracts', label: tr('chart.bar.contracts'),  expected: 626.7, cvar: 626.7, hl: false },
+      { key: 'derOnly', label: tr('chart.bar.derOnly'),    expected: 551.0, cvar: 551.2, hl: false },
+      { key: 'noDeg', label: tr('chart.bar.noDeg'),      expected: 525.5, cvar: 525.8, hl: false },
     ];
     const W = 520, H = 320;
     const padL = 56, padR = 12, padT = 16, padB = 70;
@@ -498,7 +563,7 @@
       // expected bar
       const fill = r.hl
         ? 'url(#bar-hl)'
-        : (r.label === 'GUDI' ? '#3F4A60' : '#2A3656');
+        : (r.key === 'gudi' ? '#3F4A60' : '#2A3656');
       const stroke = r.hl ? '#5BD4FF' : 'transparent';
 
       const expRect = el('rect', {
@@ -610,6 +675,63 @@
     }
   }
 
+  /* ────────────────────────── Copy buttons ─────────────────── */
+  function initCopyButtons() {
+    document.querySelectorAll('[data-copy-target]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const targetId = btn.dataset.copyTarget;
+        const target = document.getElementById(targetId);
+        if (!target) return;
+        try {
+          await navigator.clipboard.writeText(target.textContent);
+          const prev = btn.textContent;
+          btn.textContent = 'Copied';
+          btn.classList.add('copied');
+          setTimeout(() => { btn.textContent = prev; btn.classList.remove('copied'); }, 2000);
+        } catch (_) {
+          btn.textContent = 'Error';
+          setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+        }
+      });
+    });
+  }
+
+  /* ────────────────────────── Scroll progress bar ──────────────── */
+  function initScrollProgress() {
+    const bar = document.querySelector('.scroll-progress > i');
+    if (!bar) return;
+    const update = () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      bar.style.width = pct + '%';
+    };
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+  }
+
+  /* ────────────────────────── Active section nav indicator ─────── */
+  function initActiveNav() {
+    const links = document.querySelectorAll('.nav-links a[href^="#"]');
+    const sections = Array.from(links).map(a => {
+      const id = a.getAttribute('href').slice(1);
+      return document.getElementById(id);
+    }).filter(Boolean);
+    
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          links.forEach(l => l.classList.remove('is-active'));
+          const id = entry.target.id;
+          const active = document.querySelector(`.nav-links a[href="#${id}"]`);
+          if (active) active.classList.add('is-active');
+        }
+      });
+    }, { threshold: 0.3, rootMargin: '-80px 0px -40% 0px' });
+
+    sections.forEach(s => obs.observe(s));
+  }
+
   /* ────────────────────────── Fade-in on scroll ─────────────────── */
   function initFadeIn() {
     const targets = document.querySelectorAll('.section, .hero-kpis, .workflow-stage, .app-card, .eq-card');
@@ -651,6 +773,9 @@
     renderAllCharts();
     renderEquations();
     initFadeIn();
+    initScrollProgress();
+    initActiveNav();
+    initCopyButtons();
     // re-render charts when the user toggles EN/ES so axis labels update
     document.addEventListener('langchange', renderAllCharts);
   }

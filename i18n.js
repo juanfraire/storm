@@ -117,6 +117,7 @@
       'wf.s4.v5': 'β &gt; 0 · risk-averse',
 
       /* code */
+      'code.copyButton': 'Copy',
       'code.eyebrow': 'Implementation',
       'code.h2': 'Build the program. Solve the fan.',
       'code.lede': 'STORM is implemented in Python on top of Gurobi. The first-stage variables are declared outside the scenario loop so non-anticipativity is enforced structurally. The second stage indexes everything by <span class="mono cyan">(t, s)</span> over T = 35,040 intervals and S scenarios — solved at root with a reported MIP gap of zero in the headline campaign.',
@@ -209,6 +210,7 @@
       /* final CTA */
       'cta.h2': 'Engineering optimization <span class="gradient">under uncertainty.</span>',
       'cta.lede': 'A two-stage stochastic MILP for procurement and DER sizing under the Argentine MEM normalization process — open implementation, reproducible campaign, anonymized for review.',
+      'cta.paperNote': 'Paper available on request · preprint coming after peer review.',
       'cta.read': 'Read the scientific foundation',
       'cta.code': 'View the implementation',
       'cta.results': 'Inspect the campaign',
@@ -345,6 +347,7 @@
       'wf.s4.v5': 'β &gt; 0 · averso al riesgo',
 
       /* code */
+      'code.copyButton': 'Copiar',
       'code.eyebrow': 'Implementación',
       'code.h2': 'Construir el modelo. Resolver el abanico de escenarios.',
       'code.lede': 'STORM está implementado en Python sobre Gurobi. Las variables de primera etapa se declaran fuera del bucle de escenarios para imponer la no anticipatividad desde la estructura del modelo. La segunda etapa indexa las decisiones por <span class="mono cyan">(t, s)</span>, con T = 35.040 intervalos y S escenarios. En la campaña principal, las corridas reportadas cierran con MIP gap igual a cero.',

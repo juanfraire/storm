@@ -7,11 +7,32 @@
   <meta name="theme-color" content="#0A0E1A" />
   <title>STORM — AI-Driven Energy Intelligence for the Argentine MEM</title>
   <meta name="description" content="STORM is a computational framework for stochastic techno-economic optimization of industrial electricity procurement, contract portfolios, PV+BESS sizing, and tail-risk exposure in the Argentine Wholesale Electricity Market." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://storm-optimization.github.io/" />
   <meta property="og:title" content="STORM — Energy Intelligence Platform" />
   <meta property="og:description" content="Optimization under uncertainty for industrial energy systems: contracts, PV+BESS, CVaR, and MEM cost-stack exposure." />
   <meta property="og:type" content="website" />
-  <meta property="og:image" content="assets/mark.svg" />
-  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://storm-optimization.github.io/" />
+  <meta property="og:image" content="assets/og-card.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="assets/og-card.png" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ResearchProject",
+    "name": "STORM - Stochastic Trading and Optimization under Regulation for MEM",
+    "description": "A two-stage stochastic MILP for procurement and DER sizing under the Argentine Wholesale Electricity Market (MEM). Model, solver implementation, and numerical campaign.",
+    "softwareHelp": "https://github.com/storm-optimization/storm",
+    "funder": [
+      { "@type": "Organization", "name": "CEISA" }
+    ],
+    "programmingLanguage": "Python",
+    "applicationCategory": "Scientific Computing"
+  }
+  </script>
 
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -23,6 +44,8 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <a href="#model" class="skip-link" data-i18n="skipLink">Skip to main content</a>
+  <div class="scroll-progress" aria-hidden="true"><i></i></div>
 
   <!-- ===================================================== NAV -->
   <nav class="nav">
@@ -333,9 +356,12 @@
           <div class="codeblock-head">
             <span class="dots"><i></i><i></i><i></i></span>
             <span>storm / model_milp.py</span>
-            <span style="color:var(--cyan);">Gurobi 11</span>
+            <div class="codeblock-actions">
+              <span style="color:var(--cyan);">Gurobi 11</span>
+              <button type="button" class="copy-btn" data-copy-target="code-pre" data-i18n="code.copyButton" aria-label="Copy code to clipboard">Copy</button>
+            </div>
           </div>
-          <pre class="codeblock-body"><span class="kw">import</span> gurobipy <span class="kw">as</span> gp
+          <pre class="codeblock-body" id="code-pre"><span class="kw">import</span> gurobipy <span class="kw">as</span> gp
 <span class="kw">from</span> gurobipy <span class="kw">import</span> GRB
 <span class="kw">from</span> storm <span class="kw">import</span> config <span class="kw">as</span> cfg
 <span class="kw">from</span> storm.scenario_gen <span class="kw">import</span> build_scenarios
@@ -518,6 +544,17 @@ m.<span class="fn">optimize</span>()  <span class="com"># MIP gap target 2% · r
         <div class="card" style="padding: 24px;">
           <h3 style="font-size:16px; margin-bottom:16px;" data-i18n="res.barCardTitle">Baseline comparison · annual cost</h3>
           <svg id="results-bars" viewBox="0 0 520 320" preserveAspectRatio="xMidYMid meet" style="width:100%; height:auto;"></svg>
+          <noscript>
+            <div class="chart-fallback">
+              <div class="chart-fallback-row"><span>GUDI</span><span>779.7</span></div>
+              <div class="chart-fallback-row"><span>Det. EV</span><span>520.7</span></div>
+              <div class="chart-fallback-row highlight"><span>STORM-RN</span><span>520.4</span></div>
+              <div class="chart-fallback-row highlight"><span>STORM-CVaR</span><span>525.4</span></div>
+              <div class="chart-fallback-row"><span>Contracts-only</span><span>626.7</span></div>
+              <div class="chart-fallback-row"><span>DER-only</span><span>551.0</span></div>
+              <div class="chart-fallback-row"><span>No-deg.</span><span>525.5</span></div>
+            </div>
+          </noscript>
           <p class="muted mono-12" style="margin-top:14px;" data-i18n="res.barCardNote">
             kUSD / year · expected total cost (dark) and empirical CVaR<sub>95%</sub> (cyan band).
             Bars drawn from Table II of the paper.
@@ -526,7 +563,8 @@ m.<span class="fn">optimize</span>()  <span class="com"># MIP gap target 2% · r
 
         <div class="card" style="padding: 24px;">
           <h3 style="font-size:16px; margin-bottom:16px;" data-i18n="res.tableCardTitle">Strategy summary</h3>
-          <table class="results-table">
+          <div class="table-wrap">
+            <table class="results-table">
             <thead>
               <tr>
                 <th data-i18n="res.th.strategy">Strategy</th>
@@ -545,7 +583,8 @@ m.<span class="fn">optimize</span>()  <span class="com"># MIP gap target 2% · r
               <tr><td data-i18n="res.row.derOnly">DER-only</td><td>551.0</td><td>551.2</td><td>2.33</td><td>0.000</td></tr>
               <tr><td data-i18n="res.row.noDeg">STORM-CVaR · no deg.</td><td>525.5</td><td>525.8</td><td>2.29</td><td>0.006</td></tr>
             </tbody>
-          </table>
+            </table>
+          </div>
           <p class="muted mono-12" style="margin-top:14px;" data-i18n="res.tableCardNote">
             Costs in kUSD/year. Capacities in MW<sub>p</sub> (PV) and MWh (BESS). MIP gap = 0% on all non-GUDI runs.
           </p>
@@ -664,10 +703,13 @@ m.<span class="fn">optimize</span>()  <span class="com"># MIP gap target 2% · r
       <h2 data-i18n="cta.h2">
         Engineering optimization <span class="gradient">under uncertainty.</span>
       </h2>
-      <p class="lede" style="margin: 0 auto 32px; text-align: center;" data-i18n="cta.lede">
+      <p class="lede" style="margin: 0 auto 12px; text-align: center;" data-i18n="cta.lede">
         A two-stage stochastic MILP for procurement and DER sizing under the
         Argentine MEM normalization process — open implementation, reproducible
         campaign, anonymized for review.
+      </p>
+      <p class="mono-12" style="margin: 0 auto 32px; text-align: center; color:var(--text-3);" data-i18n="cta.paperNote">
+        Paper available on request · preprint coming after peer review.
       </p>
       <div class="ctas">
         <a class="btn btn-primary" href="#foundations">

@@ -96,6 +96,40 @@ button { font: inherit; cursor: pointer; }
 }
 section { position: relative; }
 
+/* skip-link */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  padding: 8px 14px;
+  background: var(--cyan);
+  color: var(--bg-1);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  z-index: 9999;
+  transition: top 0.2s;
+  text-decoration: none;
+}
+.skip-link:focus { top: 0; outline: 2px solid var(--text-1); }
+
+/* scroll progress bar */
+.scroll-progress {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--border-soft);
+  z-index: 101;
+  pointer-events: none;
+}
+.scroll-progress > i {
+  display: block;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--cyan), var(--azure));
+  transition: width 0.1s linear;
+}
+
 /* ----------------------------------------------------------------- typography */
 h1, h2, h3, h4 {
   font-family: var(--display);
@@ -185,6 +219,7 @@ code, .mono { font-family: var(--mono); }
   transition: color 0.2s;
 }
 .nav-links a:hover { color: var(--text-1); }
+.nav-links a.is-active { color: var(--text-1); border-bottom: 2px solid var(--cyan); padding-bottom: 2px; }
 .nav-cta {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 8px 14px;
@@ -274,6 +309,9 @@ code, .mono { font-family: var(--mono); }
   display: block;
   z-index: -1;
   pointer-events: none;
+}
+.hero-canvas.reduced-motion {
+  background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(79, 139, 255, 0.10) 0%, transparent 70%);
 }
 .hero-grid {
   position: absolute;
@@ -815,6 +853,77 @@ code, .mono { font-family: var(--mono); }
   color: transparent;
 }
 .final-cta .ctas { display: inline-flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+
+/* Code copy button */
+.codeblock-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+}
+.copy-btn {
+  appearance: none;
+  background: var(--bg-3);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-sm);
+  color: var(--text-2);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: all .2s;
+}
+.copy-btn:hover {
+  border-color: var(--cyan);
+  color: var(--text-1);
+}
+.copy-btn.copied {
+  color: var(--emerald);
+  border-color: var(--emerald);
+}
+
+/* Chart tooltips */
+.chart-tooltip-group {
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .15s;
+}
+.chart-tooltip-group.active { opacity: 1; }
+.chart-tooltip-rect {
+  fill: var(--bg-3);
+  stroke: var(--border-strong);
+  rx: 6;
+}
+.chart-tooltip-text {
+  fill: var(--text-1);
+  font-family: var(--mono);
+  font-size: 11px;
+}
+
+/* Table wrap for mobile */
+.table-wrap { overflow-x: auto; }
+
+/* Noscript chart fallback */
+oscript .chart-fallback {
+  display: grid;
+  gap: 8px;
+  padding: 16px 0;
+  font-family: var(--mono);
+  font-size: 13px;
+}
+oscript .chart-fallback-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-radius: var(--r-sm);
+  background: var(--bg-1);
+  border: 1px solid var(--border-soft);
+}
+noscript .chart-fallback-row.highlight {
+  border-color: var(--cyan);
+  background: rgba(91, 212, 255, 0.06);
+}
+noscript .chart-fallback-row span:last-child { color: var(--text-1); font-weight: 600; }
 
 /* ----------------------------------------------------------------- footer */
 .footer {
