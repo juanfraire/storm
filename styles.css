@@ -1086,10 +1086,35 @@ noscript .chart-fallback-row span:last-child { color: var(--text-1); font-weight
   min-width: 0;
   transition: flex .35s cubic-bezier(0.4,0,0.2,1);
   position: relative;
+  overflow: hidden;
 }
-.stack-seg span { font-size: 9px; opacity: .9; }
-.stack-seg b { font-size: 13px; font-weight: 600; }
-.stack-seg i { font-size: 8px; font-style: normal; opacity: .75; }
+.stack-seg.is-narrow span,
+.stack-seg.is-narrow b,
+.stack-seg.is-narrow i {
+  display: none;
+}
+.stack-seg-tooltip {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-3);
+  color: var(--text-1);
+  font-family: var(--mono);
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .15s;
+  white-space: nowrap;
+  z-index: 2;
+}
+.stack-seg:hover .stack-seg-tooltip {
+  opacity: 1;
+}
+
+/* stack segment gradient ids */
 #seg-pv   { background: linear-gradient(135deg, #FFB454, #FF9243); }
 #seg-bess { background: linear-gradient(135deg, #B58CFF, #9173FF); }
 #seg-mate { background: linear-gradient(135deg, #5BD4FF, #4F8BFF); }

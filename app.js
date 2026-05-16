@@ -851,12 +851,26 @@
     const wMATP  = clamp(r.matp / 10 / totalVol * 100, 0, 100);
     const wSPOT  = Math.max(100 - wPV - wBESS - wMATE - wMATER - wMATP, 2);
 
-    document.getElementById('seg-pv').style.setProperty('--w', wPV);
-    document.getElementById('seg-bess').style.setProperty('--w', wBESS);
-    document.getElementById('seg-mate').style.setProperty('--w', wMATE);
-    document.getElementById('seg-mater').style.setProperty('--w', wMATER);
-    document.getElementById('seg-matp').style.setProperty('--w', wMATP);
-    document.getElementById('seg-spot').style.setProperty('--w', wSPOT);
+    const setSeg = (id, w) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.style.setProperty('--w', w);
+      el.classList.toggle('is-narrow', w < 6);
+      // tooltip text for hover on narrow segments
+      let tip = el.querySelector('.stack-seg-tooltip');
+      if (!tip) {
+        tip = document.createElement('span');
+        tip.className = 'stack-seg-tooltip';
+        el.appendChild(tip);
+      }
+      tip.textContent = `${el.querySelector('b')?.textContent ?? ''} ${el.querySelector('i')?.textContent ?? ''}`;
+    };
+    setSeg('seg-pv',    wPV);
+    setSeg('seg-bess',  wBESS);
+    setSeg('seg-mate',  wMATE);
+    setSeg('seg-mater', wMATER);
+    setSeg('seg-matp',  wMATP);
+    setSeg('seg-spot',  wSPOT);
 
     // hedge gauge: physical supply / total supply
     const physicalMWh = r.pv * 1000 + r.bess * 4; // rough annual equivalent
