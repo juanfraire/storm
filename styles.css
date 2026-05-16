@@ -32,9 +32,18 @@
   --rose: #FF6E8A;
   --emerald: #4ADE80;
 
+  /* Argentine flag palette */
+  --arg-celeste: #75AADB;
+  --arg-celeste-light: #8DC4F0;
+  --arg-celeste-dark: #5B8FC4;
+  --arg-white: #FFFFFF;
+  --arg-gold: #F6B40E;
+  --arg-gold-light: #FFD54F;
+
   /* Gradients */
-  --grad-storm: linear-gradient(135deg, #5BD4FF 0%, #4F8BFF 55%, #B58CFF 100%);
-  --grad-storm-soft: linear-gradient(135deg, rgba(91,212,255,0.15) 0%, rgba(79,139,255,0.10) 55%, rgba(181,140,255,0.12) 100%);
+  --grad-storm: linear-gradient(135deg, var(--arg-celeste) 0%, var(--cyan) 40%, var(--azure) 100%);
+  --grad-storm-soft: linear-gradient(135deg, rgba(117,170,219,0.15) 0%, rgba(91,212,255,0.10) 55%, rgba(79,139,255,0.12) 100%);
+  --grad-arg: linear-gradient(180deg, var(--arg-celeste) 0%, var(--arg-white) 50%, var(--arg-celeste) 100%);
 
   /* Typography */
   --sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -210,6 +219,16 @@ code, .mono { font-family: var(--mono); }
   letter-spacing: 0.18em;
 }
 .nav-brand img { width: 28px; height: 28px; }
+.nav-flag {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  overflow: hidden;
+  opacity: 0.85;
+  transition: opacity 0.2s;
+}
+.nav-brand:hover .nav-flag { opacity: 1; }
 .nav-links {
   display: flex; gap: 28px;
   font-size: 14px;
@@ -765,12 +784,12 @@ code, .mono { font-family: var(--mono); }
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+  background: linear-gradient(90deg, transparent, var(--arg-gold), transparent);
   opacity: 0;
   transition: opacity 0.25s;
 }
-.app-card:hover { border-color: var(--border-strong); transform: translateY(-2px); }
-.app-card:hover::before { opacity: 0.6; }
+.app-card:hover { border-color: var(--arg-celeste-dark); transform: translateY(-2px); }
+.app-card:hover::before { opacity: 0.8; }
 .app-card .icon {
   width: 36px; height: 36px;
   border: 1px solid var(--border);

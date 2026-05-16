@@ -476,8 +476,8 @@
       const saved = localStorage.getItem(STORE_KEY);
       if (saved === 'en' || saved === 'es') return saved;
     } catch (_) { /* private mode etc. */ }
-    const nav = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
-    return nav.startsWith('es') ? 'es' : 'en';
+    // Default to Spanish for this Argentine-focused project
+    return 'es';
   }
 
   let currentLang = detectLang();
@@ -509,6 +509,7 @@
     if (lang === currentLang) return;
     currentLang = lang;
     try { localStorage.setItem(STORE_KEY, lang); } catch (_) {}
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     applyTranslations();
     document.dispatchEvent(new CustomEvent('langchange', { detail: { lang } }));
   }
