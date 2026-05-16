@@ -901,8 +901,6 @@
       return `M ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2}`;
     };
 
-    const midAngle = (start, end) => (start + end) / 2 * TAU - Math.PI / 2;
-
     // background track (subtle)
     svg.appendChild(el('circle', {
       cx, cy, r,
@@ -920,32 +918,6 @@
       d: arc(capexPct, 1), fill: 'none',
       stroke: '#5BD4FF', 'stroke-width': thickness, 'stroke-linecap': 'round',
     }));
-
-    // percentage labels on the arcs
-    if (capexPct > 0.08) {
-      const a = midAngle(0, capexPct);
-      const tx = cx + (r - thickness/2 - 2) * Math.cos(a);
-      const ty = cy + (r - thickness/2 - 2) * Math.sin(a);
-      const t = el('text', {
-        x: tx, y: ty + 1, fill: '#0A0E1A',
-        'font-family': 'JetBrains Mono', 'font-size': 10, 'font-weight': 600,
-        'text-anchor': 'middle', 'dominant-baseline': 'central',
-      });
-      t.textContent = Math.round(capexPct * 100) + '%';
-      svg.appendChild(t);
-    }
-    if (opexPct > 0.08) {
-      const a = midAngle(capexPct, 1);
-      const tx = cx + (r - thickness/2 - 2) * Math.cos(a);
-      const ty = cy + (r - thickness/2 - 2) * Math.sin(a);
-      const t = el('text', {
-        x: tx, y: ty + 1, fill: '#0A0E1A',
-        'font-family': 'JetBrains Mono', 'font-size': 10, 'font-weight': 600,
-        'text-anchor': 'middle', 'dominant-baseline': 'central',
-      });
-      t.textContent = Math.round(opexPct * 100) + '%';
-      svg.appendChild(t);
-    }
 
     // legend on the right side
     const legendX = 130;
