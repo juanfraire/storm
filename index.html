@@ -5,8 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="color-scheme" content="dark" />
   <meta name="theme-color" content="#0A0E1A" />
-  <title>STORM — Stochastic Trading and Optimization under Regulation for MEM</title>
-  <meta name="description" content="STORM is a two-stage stochastic MILP for industrial-scale electricity procurement and behind-the-meter DER sizing under the post-Resolution SE 400/2025 Argentine wholesale market." />
+  <title>STORM — AI-Driven Energy Intelligence for the Argentine MEM</title>
+  <meta name="description" content="STORM is a computational framework for stochastic techno-economic optimization of industrial electricity procurement, contract portfolios, PV+BESS sizing, and tail-risk exposure in the Argentine Wholesale Electricity Market." />
+  <meta property="og:title" content="STORM — Energy Intelligence Platform" />
+  <meta property="og:description" content="Optimization under uncertainty for industrial energy systems: contracts, PV+BESS, CVaR, and MEM cost-stack exposure." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="assets/mark.svg" />
+  <meta name="twitter:card" content="summary" />
 
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -29,9 +34,11 @@
       <div class="nav-links">
         <a href="#model" data-i18n="nav.model">Model</a>
         <a href="#workflow" data-i18n="nav.workflow">Workflow</a>
+        <a href="#code" data-i18n="nav.code">Code</a>
         <a href="#foundations" data-i18n="nav.foundations">Foundations</a>
         <a href="#results" data-i18n="nav.results">Results</a>
         <a href="#applications" data-i18n="nav.applications">Applications</a>
+        <a href="#engagement" data-i18n="nav.engagement">Engagement</a>
       </div>
       <div class="nav-right">
         <div class="lang-toggle" role="group" aria-label="Language">
@@ -77,15 +84,15 @@
       </div>
 
       <div class="hero-cta">
-        <a class="btn btn-primary" href="#read">
-          <span data-i18n="hero.cta.read">Read the paper</span>
+        <a class="btn btn-primary" href="#code">
+          <span data-i18n="hero.cta.code">Explore the code</span>
           <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
         </a>
         <a class="btn btn-secondary" href="#model" data-i18n="hero.cta.explore">
           Explore the model
         </a>
-        <a class="btn btn-ghost" href="#workflow" data-i18n="hero.cta.workflow">
-          View the workflow →
+        <a class="btn btn-ghost" href="#read" data-i18n="hero.cta.read">
+          Read the paper →
         </a>
       </div>
 
@@ -605,6 +612,52 @@ m.<span class="fn">optimize</span>()  <span class="com"># MIP gap target 2% · r
     </div>
   </section>
 
+  <!-- ===================================================== ENGAGEMENT MODELS -->
+  <section class="section" id="engagement" style="background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow" data-i18n="eng.eyebrow">Engagement models</span>
+        <h2 class="h-section" data-i18n="eng.h2">Use STORM as a model, a workflow, or a managed decision service.</h2>
+        <p class="lede" data-i18n="eng.lede">
+          STORM can be adopted at different levels of depth: from licensing the optimization model and integrating it with internal tools, to using the team as a technical partner for procurement studies, scenario design, and decision support.
+        </p>
+      </div>
+
+      <div class="apps-grid">
+        <div class="app-card">
+          <div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/><path d="M8 4v16M16 4v16"/></svg></div>
+          <h3 data-i18n="eng.c1.title">Model licensing</h3>
+          <p data-i18n="eng.c1.desc">Access to the STORM formulation, scenario structure, data templates, and reproducible optimization workflow for internal studies and recurring analyses.</p>
+        </div>
+        <div class="app-card">
+          <div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 9l-4 3 4 3M16 9l4 3-4 3"/><path d="M13 5l-2 14"/></svg></div>
+          <h3 data-i18n="eng.c2.title">Python integration</h3>
+          <p data-i18n="eng.c2.desc">Integration with Python pipelines, notebooks, dashboards, APIs, Gurobi environments, and existing data workflows used by technical teams.</p>
+        </div>
+        <div class="app-card">
+          <div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M4 9h16M9 4v16"/></svg></div>
+          <h3 data-i18n="eng.c3.title">Excel-first deployment</h3>
+          <p data-i18n="eng.c3.desc">A practical spreadsheet interface for organizations that need structured inputs, auditable assumptions, and exportable results before adopting a full Python stack.</p>
+        </div>
+        <div class="app-card">
+          <div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18"/><path d="M6 18V9M12 18V5M18 18v-7"/></svg></div>
+          <h3 data-i18n="eng.c4.title">Consulting studies</h3>
+          <p data-i18n="eng.c4.desc">One-off or periodic studies for contract portfolios, PV+BESS sizing, GUDI/GUMA/GUME migration, PPAD exposure, and CVaR-based risk analysis.</p>
+        </div>
+        <div class="app-card">
+          <div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l9 5-9 5-9-5 9-5z"/><path d="M3 12l9 5 9-5"/><path d="M3 17l9 5 9-5"/></svg></div>
+          <h3 data-i18n="eng.c5.title">Managed decision support</h3>
+          <p data-i18n="eng.c5.desc">Scenario updates, model runs, sensitivity analysis, and executive reporting delivered as a recurring analytical service for management teams.</p>
+        </div>
+        <div class="app-card">
+          <div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M8 15l3-3 3 2 5-7"/></svg></div>
+          <h3 data-i18n="eng.c6.title">Executive + technical outputs</h3>
+          <p data-i18n="eng.c6.desc">Decision memos, reproducible notebooks, Excel workbooks, scenario reports, investment recommendations, and technical appendices for auditability.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ===================================================== FINAL CTA -->
   <section class="final-cta" id="read">
     <div class="container">
@@ -617,12 +670,12 @@ m.<span class="fn">optimize</span>()  <span class="com"># MIP gap target 2% · r
         campaign, anonymized for review.
       </p>
       <div class="ctas">
-        <a class="btn btn-primary" href="#top">
-          <span data-i18n="cta.read">Read the manuscript</span>
+        <a class="btn btn-primary" href="#foundations">
+          <span data-i18n="cta.read">Read the scientific foundation</span>
           <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
         </a>
         <a class="btn btn-secondary" href="#code" data-i18n="cta.code">View the implementation</a>
-        <a class="btn btn-secondary" href="#results" data-i18n="cta.results">Inspect the campaign</a>
+        <a class="btn btn-secondary" href="#engagement" data-i18n="cta.engagement">Discuss adoption</a>
       </div>
     </div>
   </section>
@@ -641,13 +694,13 @@ m.<span class="fn">optimize</span>()  <span class="com"># MIP gap target 2% · r
         <div style="display:flex; gap:32px; flex-wrap:wrap;">
           <div>
             <div class="mono-12" style="color:var(--text-2); margin-bottom:6px;" data-i18n="foot.affiliation">Affiliation</div>
-            <div>CONICET — Universidad Nacional de Córdoba</div>
-            <div>Inria · INSA Lyon · CITI · UR3720</div>
+            <div>CEISA</div>
+            <!-- <div>Inria · INSA Lyon · CITI · UR3720</div> -->
           </div>
           <div>
             <div class="mono-12" style="color:var(--text-2); margin-bottom:6px;" data-i18n="foot.stack">Solver / stack</div>
             <div>Python · Gurobi 11 · NumPy / Pandas</div>
-            <div>IEEEtran manuscript · LaTeX</div>
+            <!-- <div>IEEEtran manuscript · LaTeX</div> -->
           </div>
         </div>
       </div>
