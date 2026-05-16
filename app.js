@@ -886,53 +886,93 @@
   function renderExplorerDonut(capex, opex) {
     const svg = document.getElementById('explorer-donut');
     if (!svg) return;
-    const W = 200, H = 120, cx = 100, cy = 60, r = 45, thickness = 14;
+    clearSvg('explorer-donut');
+    const W = 240, H = 130, cx = 70, cy = 65, r = 44, thickness = 16;
     const total = capex + opex;
-    const capexPct = capex / total;
+    const capexPct = total > 0 ? capex / total : 0;
     const opexPct  = 1 - capexPct;
 
     const arc = (start, end) => {
       const x1 = cx + r * Math.cos(start * TAU - Math.PI / 2);
       const y1 = cy + r * Math.sin(start * TAU - Math.PI / 2);
-      const x2 = cx + r * Math.cos(end * TAU - Math.PI / 2);
-      const y2 = cy + r * Math.sin(end * TAU - Math.PI / 2);
+      const x2 = cx + r * Math.cos(end   * TAU - Math.PI / 2);
+      const y2 = cy + r * Math.sin(end   * TAU - Math.PI / 2);
       const large = (end - start) > 0.5 ? 1 : 0;
       return `M ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2}`;
     };
 
+    const midAngle = (start, end) => (start + end) / 2 * TAU - Math.PI / 2;
+
+    // background track (subtle)
+    svg.appendChild(el('circle', {
+      cx, cy, r,
+      fill: 'none',
+      stroke: 'rgba(30,42,68,0.5)', 'stroke-width': thickness,
+    }));
+
+    // CAPEX arc
     svg.appendChild(el('path', {
       d: arc(0, capexPct), fill: 'none',
       stroke: '#FFB454', 'stroke-width': thickness, 'stroke-linecap': 'round',
     }));
+    // OPEX arc
     svg.appendChild(el('path', {
       d: arc(capexPct, 1), fill: 'none',
       stroke: '#5BD4FF', 'stroke-width': thickness, 'stroke-linecap': 'round',
     }));
 
-    // center text
-    const tCapex = el('text', {
-      x: cx - 26, y: cy + 4, fill: '#FFB454',
-      'font-family': 'JetBrains Mono', 'font-size': 11, 'text-anchor': 'end',
-    });
-    tCapex.textContent = 'CAPEX';
-    svg.appendChild(tCapex);
-    const tOpex = el('text', {
-      x: cx + 26, y: cy + 4, fill: '#5BD4FF',
-      'font-family': 'JetBrains Mono', 'font-size': 11, 'text-anchor': 'start',
-    });
-    tOpex.textContent = 'OPEX';
-    svg.appendChild(tOpex);
-
-    // legend row
-    const legendY = H - 18;
-    [[0, '#FFB454', 'CAPEX', capex], [80, '#5BD4FF', 'OPEX', opex]].forEach(([x, color, label, val]) => {
-      svg.appendChild(el('rect', { x: cx - 50 + x, y: legendY - 8, width: 8, height: 8, fill: color, rx: 2 }));
+    // percentage labels on the arcs
+    if (capexPct > 0.08) {
+      const a = midAngle(0, capexPct);
+      const tx = cx + (r - thickness/2 - 2) * Math.cos(a);
+      const ty = cy + (r - thickness/2 - 2) * Math.sin(a);
       const t = el('text', {
-        x: cx - 38 + x, y: legendY, fill: '#A0AABF',
-        'font-family': 'JetBrains Mono', 'font-size': 9,
+        x: tx, y: ty + 1, fill: '#0A0E1A',
+        'font-family': 'JetBrains Mono', 'font-size': 10, 'font-weight': 600,
+        'text-anchor': 'middle', 'dominant-baseline': 'central',
       });
-      t.textContent = label + ' ' + val.toFixed(0);
+      t.textContent = Math.round(capexPct * 100) + '%';
       svg.appendChild(t);
+    }
+    if (opexPct > 0.08) {
+      const a = midAngle(capexPct, 1);
+      const tx = cx + (r - thickness/2 - 2) * Math.cos(a);
+      const ty = cy + (r - thickness/2 - 2) * Math.sin(a);
+      const t = el('text', {
+        x: tx, y: ty + 1, fill: '#0A0E1A',
+        'font-family': 'JetBrains Mono', 'font-size': 10, 'font-weight': 600,
+        'text-anchor': 'middle', 'dominant-baseline': 'central',
+      });
+      t.textContent = Math.round(opexPct * 100) + '%';
+      svg.appendChild(t);
+    }
+
+    // legend on the right side
+    const legendX = 130;
+    [
+      [0, '#FFB454', 'CAPEX', capex],
+      [40, '#5BD4FF', 'OPEX', opex],
+    ].forEach(([yOff, color, label, val]) => {
+      const ly = cy - 14 + yOff;
+      // color dot
+      svg.appendChild(el('circle', {
+        cx: legendX, cy: ly - 1, r: 5, fill: color,
+      }));
+      // label + value
+      const t = el('text', {
+        x: legendX + 12, y: ly + 1, fill: '#E6EDF7',
+        'font-family': 'JetBrains Mono', 'font-size': 11, 'font-weight': 600,
+        'text-anchor': 'start',
+      });
+      t.textContent = label;
+      svg.appendChild(t);
+      const t2 = el('text', {
+        x: legendX + 12, y: ly + 13, fill: '#A0AABF',
+        'font-family': 'JetBrains Mono', 'font-size': 10,
+        'text-anchor': 'start',
+      });
+      t2.textContent = val.toFixed(1) + ' kUSD';
+      svg.appendChild(t2);
     });
   }
 
