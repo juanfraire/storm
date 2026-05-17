@@ -307,7 +307,7 @@
 
       /* MEM context */
       'mem.eyebrow': 'El MEM argentino',
-      'mem.h2': 'El costo del usuario es una pila de cargos, no un único precio.',
+      'mem.h2': 'El costo del usuario es una estructura de componentes, no un precio único.',
       'mem.lede': 'Con la Resolución SE 400/2025 se reabre la posibilidad de elegir cómo abastecerse para los Grandes Usuarios industriales. Para el usuario, el costo final es una estructura de componentes tarifarios, no un precio único. El modelo separa el costo puro de la energía de la reserva de potencia, los cargos por servicios de reserva de confiabilidad, el transporte, el peaje de distribución y los cargos impositivos locales.',
       'mem.stack.label': 'Pila de costos aproximada — Gran Usuario industrial (Caso 3, pico de 1,247 MW)',
       'mem.stack.source': 'Componentes de liquidación DTE de CAMMESA',
