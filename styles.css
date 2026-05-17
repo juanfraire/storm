@@ -698,6 +698,7 @@ code, .mono { font-family: var(--mono); }
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   padding: var(--space-5);
+  min-width: 0;
 }
 .eq-card .eq-label {
   font-family: var(--mono);
@@ -719,6 +720,7 @@ code, .mono { font-family: var(--mono); }
   border: 1px solid var(--border-soft);
   border-radius: var(--r-md);
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   font-size: 16px;
   color: var(--text-1);
 }
