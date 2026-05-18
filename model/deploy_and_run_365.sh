@@ -29,9 +29,13 @@ cp \
   model/scenario_gen.py \
   model/model_milp.py \
   model/baselines.py \
+  model/solve.py \
+  model/storm.py \
   model/run_server_campaign.py \
   model/run_server_campaign_365.py \
   model/plot_campaign.py \
+  model/requirements.txt \
+  model/README.md \
   model/MODEL.md \
   model/SERVER.md \
   "${STAGE}/"
@@ -97,7 +101,13 @@ if ! python3 -m venv venv; then
 fi
 source venv/bin/activate
 pip install -q --upgrade pip
-pip install -q numpy pandas scipy matplotlib seaborn openpyxl gurobipy
+# Install from the shipped requirements.txt if present; otherwise install the
+# legacy explicit list. This keeps older server snapshots working.
+if [ -f "${DEST}/requirements.txt" ]; then
+    pip install -q -r "${DEST}/requirements.txt"
+else
+    pip install -q numpy pandas scipy matplotlib gurobipy
+fi
 
 echo "--- Checking Gurobi ---"
 if command -v gurobi_cl >/dev/null 2>&1; then
