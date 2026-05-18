@@ -1,2 +1,20 @@
 Notes.txt
 
+# macOS
+.DS_Store
+
+# Python (for the model/ subfolder)
+model/__pycache__/
+model/**/__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+*.egg-info/
+
+# STORM runtime outputs (campaign results and figures)
+model/output/
+
+# Gurobi
+gurobi.log
+infeasible.ilp
