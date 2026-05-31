@@ -272,13 +272,19 @@ def _strategy_value(rows: list, strategy: str, getter) -> float:
 
 
 def plot_baseline_comparison(results: list, output_dir: str = None, width="double",
-                             formats=("pdf", "png"), seed_results: dict = None):
+                             formats=("pdf", "png"), seed_results: dict = None,
+                             ratio: float = None, stem: str = None):
     """Plot baseline strategy comparison for the paper.
 
     When ``seed_results`` is provided as ``{seed_name: [rows]}``, per-seed dots
     are overlaid on the cost bars and a third panel shows the headline
     differences (CVaR expected-cost premium, OPEX-CVaR reduction, VSS) with
     error bars whose half-height is the across-seed standard deviation.
+
+    ``ratio`` overrides the height/width aspect ratio (smaller = shorter), and
+    ``stem`` overrides the output filename. Both default to the original
+    behaviour so existing callers/figures are unchanged; the compact ARGENCON
+    variant passes a smaller ``ratio`` and a distinct ``stem``.
     """
     if not results:
         return
@@ -294,11 +300,11 @@ def plot_baseline_comparison(results: list, output_dir: str = None, width="doubl
 
     if have_seeds:
         fig, axes = plt.subplots(
-            1, 3, figsize=figure_size(width, 0.36),
+            1, 3, figsize=figure_size(width, ratio if ratio is not None else 0.36),
             gridspec_kw={"width_ratios": [1.6, 1.4, 1.0]},
         )
     else:
-        fig, axes = plt.subplots(1, 2, figsize=figure_size(width, 0.336))
+        fig, axes = plt.subplots(1, 2, figsize=figure_size(width, ratio if ratio is not None else 0.336))
 
     # --- Panel (a): cost bars + per-seed dots ---
     barw = 0.36
@@ -384,8 +390,103 @@ def plot_baseline_comparison(results: list, output_dir: str = None, width="doubl
         add_panel_label(axes[2], "(c)")
 
     fig.tight_layout(pad=0.6)
-    save_figure(fig, f"paper_baseline_comparison_{width}", output_dir, formats)
+    save_figure(fig, stem or f"paper_baseline_comparison_{width}", output_dir, formats)
     plt.close(fig)
+
+
+def plot_sensitivity_combined(cvar_results: list, bess_results: list, ppad_results: list,
+                              output_dir: str = None, formats=("pdf", "png"),
+                              stem: str = "paper_sensitivity_combined"):
+    """Compact ARGENCON sensitivity figure: CVaR, BESS-cost, and PPAD sweeps as
+    three horizontal panels in a single double-column figure.
+
+    Each panel collapses the multi-row single-column figures used in the
+    extension into one axes showing the first-stage decision variables (whose
+    values all fall in a comparable 0--3 numeric range) against the swept
+    parameter. The originals (``plot_cvar_sensitivity`` etc.) are left intact so
+    the extended paper keeps its full-detail figures.
+    """
+    if not (cvar_results or bess_results or ppad_results):
+        return
+
+    fig, axes = plt.subplots(1, 3, figsize=figure_size("double", 0.30))
+
+    # --- Panel (a): CVaR risk-aversion sweep ---
+    cvar_results = sorted(cvar_results, key=lambda r: result_value(r, "cvar_beta", default=numeric_suffix(r["name"])))
+    xb = lambda r: result_value(r, "cvar_beta", default=numeric_suffix(r["name"], "cvar_beta_", "cvar_"))
+    plot_grouped_line(axes[0], cvar_results, xb, pv_mwp, "PV", COLORS["pv"], "s")
+    plot_grouped_line(axes[0], cvar_results, xb, bess_mwh, "BESS", COLORS["bess"], "^")
+    plot_grouped_line(axes[0], cvar_results, xb, matp_mw, "MATP", COLORS["matp"], "D")
+    plot_grouped_line(axes[0], cvar_results, xb,
+                      lambda r: annual_contract_gwh(r, "contract_MATE_mwh"), "MATE", COLORS["mate"], "o")
+    axes[0].set_xlabel("CVaR weight $\\beta$")
+    axes[0].set_ylabel("MWp / MWh / MW / GWh")
+    axes[0].set_title("Risk aversion")
+    prettify_axes(axes[0])
+    add_panel_label(axes[0], "(a)")
+
+    # --- Panel (b): BESS capital-cost sweep ---
+    bess_results = sorted(bess_results, key=lambda r: result_value(r, "gamma_bess", default=numeric_suffix(r["name"])))
+    xc = lambda r: result_value(r, "gamma_bess", default=numeric_suffix(r["name"], "bess_cost_", "bess_"))
+    plot_grouped_line(axes[1], bess_results, xc, bess_mwh, "BESS", COLORS["bess"], "^")
+    plot_grouped_line(axes[1], bess_results, xc, pv_mwp, "PV", COLORS["pv"], "s")
+    plot_grouped_line(axes[1], bess_results, xc, matp_mw, "MATP", COLORS["matp"], "D")
+    axes[1].set_xlabel("BESS cost (USD/kWh)")
+    axes[1].set_title("BESS threshold")
+    prettify_axes(axes[1])
+    add_panel_label(axes[1], "(b)")
+
+    # --- Panel (c): residual-PPAD price sweep ---
+    ppad_results = sorted(ppad_results, key=lambda r: result_value(r, "ppad_spot_price", default=numeric_suffix(r["name"])))
+    xp = lambda r: result_value(r, "ppad_spot_price", default=numeric_suffix(r["name"], "ppad_spot_"))
+    plot_grouped_line(axes[2], ppad_results, xp, matp_mw, "MATP", COLORS["matp"], "D")
+    plot_grouped_line(axes[2], ppad_results, xp, bess_mwh, "BESS", COLORS["bess"], "^")
+    axes[2].set_xlabel("Residual PPAD (USD/MWhrp)")
+    axes[2].set_title("PPAD activation")
+    prettify_axes(axes[2])
+    add_panel_label(axes[2], "(c)")
+
+    # Single shared legend across all decision variables, above the panels.
+    handles = [
+        plt.Line2D([0], [0], color=COLORS["pv"], marker="s", label="PV (MWp)"),
+        plt.Line2D([0], [0], color=COLORS["bess"], marker="^", label="BESS (MWh)"),
+        plt.Line2D([0], [0], color=COLORS["matp"], marker="D", label="MATP (MW)"),
+        plt.Line2D([0], [0], color=COLORS["mate"], marker="o", label="MATE (GWh)"),
+    ]
+    fig.legend(handles=handles, loc="upper center", ncol=4, frameon=False,
+               bbox_to_anchor=(0.5, 1.02))
+    fig.tight_layout(pad=0.6, rect=(0, 0, 1, 0.94))
+    save_figure(fig, stem, output_dir, formats)
+    plt.close(fig)
+
+
+def plot_argencon(input_dir: str = None, output_dir: str = None, formats=("pdf", "png")):
+    """Generate only the compact figures used by the 8-page ARGENCON version.
+
+    Writes ``paper_baseline_comparison_argencon`` (shorter) and
+    ``paper_sensitivity_combined`` (CVaR/BESS/PPAD in one row). The full-detail
+    figures used by the extension are not touched.
+    """
+    configure_style()
+    input_dir = input_dir or OUTPUT_DIR
+    output_dir = output_dir or PLOT_DIR
+    os.makedirs(output_dir, exist_ok=True)
+
+    print("Generating compact ARGENCON figures...")
+    seed_baselines = load_seed_baselines(input_dir)
+    plot_baseline_comparison(
+        load_first(["09_baselines", "baselines"], input_dir),
+        output_dir, "double", formats,
+        seed_results=seed_baselines if len(seed_baselines) >= 2 else None,
+        ratio=0.30, stem="paper_baseline_comparison_argencon",
+    )
+    plot_sensitivity_combined(
+        load_first(["01_cvar_beta", "cvar_beta"], input_dir),
+        load_first(["02_bess_cost", "bess_cost"], input_dir),
+        load_first(["06_ppad_spot", "05_ppad_spot", "ppad_spot"], input_dir),
+        output_dir, formats,
+    )
+    print(f"ARGENCON figures saved to {output_dir}")
 
 
 def plot_cvar_sensitivity(results: list, output_dir: str = None, width="single",
@@ -760,6 +861,8 @@ def parse_args():
     parser.add_argument("--output", default=PLOT_DIR, help="Directory for generated figures.")
     parser.add_argument("--width", choices=["single", "double"], default="single", help="Width for sensitivity figures.")
     parser.add_argument("--formats", default="pdf,png", help="Comma-separated output formats.")
+    parser.add_argument("--argencon", action="store_true",
+                        help="Generate only the compact 8-page ARGENCON figures (combined sensitivity + shorter baseline).")
     parser.add_argument("--no-envelopes", action="store_true", help="Skip scenario uncertainty envelope figure.")
     parser.add_argument("--envelope-days", type=int, default=7, help="Days to include in the scenario-envelope figure.")
     parser.add_argument("--envelope-scenarios", type=int, default=80, help="Scenarios to draw for the scenario-envelope figure.")
@@ -770,6 +873,9 @@ def parse_args():
 if __name__ == "__main__":
     args = parse_args()
     fmts = tuple(fmt.strip() for fmt in args.formats.split(",") if fmt.strip())
+    if args.argencon:
+        plot_argencon(args.input, args.output, fmts)
+        raise SystemExit(0)
     plot_all(
         args.input,
         args.output,
