@@ -343,6 +343,10 @@ def plot_baseline_comparison(results: list, output_dir: str = None, width="doubl
     axes[1].set_xticklabels(labels, rotation=25, ha="right")
     axes[1].set_ylabel("MWp / MWh / MW")
     axes[1].set_title("First-stage hedges")
+    # Headroom so the single-row legend clears the tallest PV/BESS/MATP bars.
+    _hmax = max([pv_mwp(r) for r in results] + [bess_mwh(r) for r in results]
+                + [matp_mw(r) for r in results] + [0.0])
+    axes[1].set_ylim(top=max(2.5, _hmax * 1.28))
     axes[1].legend(loc="upper right", frameon=False, ncol=3)
     prettify_axes(axes[1], xgrid=False)
     add_panel_label(axes[1], "(b)")
