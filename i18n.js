@@ -1,6 +1,7 @@
 /* ============================================================
    STORM — EN/ES (Argentina) i18n
-   - auto-detects navigator.language on first visit (es-* → es)
+   - defaults to English on first visit (international/academic audience;
+     the pyrion.com.ar company site defaults to Spanish instead)
    - persists user choice in localStorage
    - swaps innerHTML of every [data-i18n] element
    - exposes window.t(key) and window.setLang(lang)
@@ -522,8 +523,9 @@
       const saved = localStorage.getItem(STORE_KEY);
       if (saved === 'en' || saved === 'es') return saved;
     } catch (_) { /* private mode etc. */ }
-    // Default to Spanish for this Argentine-focused project
-    return 'es';
+    // Default to English for the international / academic audience of the STORM
+    // research site (the pyrion.com.ar company site defaults to Spanish instead).
+    return 'en';
   }
 
   let currentLang = detectLang();
