@@ -45,6 +45,23 @@ sys.path.insert(0, HERE)
 import config as cfg  # noqa: E402
 
 
+def available_cases() -> list:
+    """Case ids loadable from the data dir, i.e. every `demand_<case>.csv`.
+
+    Lets toy/real cases (e.g. `case_toy_step`, `case_fcq`) be selected without
+    hardcoding a frozen list. Known UCEMA cases sort first.
+    """
+    import glob
+
+    cases = []
+    for path in sorted(glob.glob(os.path.join(cfg.DATA_DIR, "demand_*.csv"))):
+        name = os.path.basename(path)[len("demand_"):-len(".csv")]
+        cases.append(name)
+    # surface the documented UCEMA cases first, then the rest
+    known = [c for c in cfg.CASE_METADATA if c in cases]
+    return known + [c for c in cases if c not in known]
+
+
 # ---------------------------------------------------------------------------
 # solve
 # ---------------------------------------------------------------------------
@@ -192,7 +209,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     # solve
     sp = sub.add_parser("solve", help="Solve a single STORM instance.")
-    sp.add_argument("--case", choices=["case_3", "case_10"], default="case_3")
+    sp.add_argument("--case", choices=available_cases(), default="case_3")
     sp.add_argument("--days", type=int, default=365, help="Horizon length in days.")
     sp.add_argument("--delta-t", type=float, default=0.25, help="Interval length in hours.")
     sp.add_argument("--scenarios", type=int, default=12)

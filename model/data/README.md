@@ -12,6 +12,9 @@ CSV files that the model reads directly.
 | `demand_case_10.csv` | Original: `Caso 10` sheet | 15-min demand profile, 35,040 rows, 0.61 GWh/year, 171 kW peak. |
 | `solar_irradiance_cordoba.csv` | Legacy computed profile | PV power factor (kW/kWp) at 15-min resolution. The loader converts it to interval kWh/kWp and scales it for Buenos Aires/La Plata. |
 | `monthly_billing/caso_{1,2,6,7,9}.csv` | Original: monthly billing sheets | Monthly energy and power data for additional case studies. |
+| `demand_case_toy_*.csv` | `generate_toy_demand.py` | Synthetic schedule-driven demand (simple step / lunch double-step + entry/exit-hour sweep), 35,040 rows. Deterministic intuition/sanity-check profiles, **not real data**. Load with `--case case_toy_<name>`. |
+| `demand_case_fcq.csv` | `consultora/Demanda_FCQ/extract_fcq_demand.py` | Real metered demand, FCQ "Ciencias 2" (meter DIGA00015218, tariff T3, Córdoba), base year 2023. 35,040 rows, 348 MWh/yr, 182 kW peak, load factor 0.22. `--case case_fcq`. |
+| `demand_case_fcq_x3.csv` | same, `--scale 3.0` | FCQ ×3 ("company-sized"): 1045 MWh/yr, 546 kW peak. `--case case_fcq_x3`. |
 
 ## Format
 
@@ -36,6 +39,17 @@ slice instead of always starting on January 1.
 To regenerate this folder from the course materials, run:
 ```bash
 python3 model/data/extract_from_course.py
+```
+
+To regenerate the synthetic toy demand cases (and their schedule sweep), run:
+```bash
+python3 model/data/generate_toy_demand.py --sweep   # add --help for parameters
+```
+
+To regenerate the FCQ real-demand case from the source Excels (kept outside the
+model so this folder stays self-contained), run:
+```bash
+python3 ../../../consultora/Demanda_FCQ/extract_fcq_demand.py   # writes demand_case_fcq*.csv here
 ```
 
 ## Notes
