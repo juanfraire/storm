@@ -4,15 +4,16 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="color-scheme" content="dark" />
-  <meta name="theme-color" content="#75AADB" />
-  <title>STORM — AI-Driven Energy Intelligence for the Argentine MEM</title>
-  <meta name="description" content="STORM is a computational framework for stochastic techno-economic optimization of industrial electricity procurement, contract portfolios, PV+BESS sizing, and tail-risk exposure in the Argentine Wholesale Electricity Market." />
+  <meta name="theme-color" content="#050810" />
+  <title>STORM — Motor de optimización energética de Pyrion para el MEM</title>
+  <meta name="description" content="STORM is a computational framework for stochastic techno-economic optimization of industrial electricity procurement, contract portfolios, PV+BESS sizing, and tail-risk exposure in the Argentine Wholesale Electricity Market. The optimization engine behind Pyrion." />
   <meta name="robots" content="index, follow" />
-  <link rel="canonical" href="https://storm-optimization.github.io/" />
-  <meta property="og:title" content="STORM — Energy Intelligence Platform" />
-  <meta property="og:description" content="Optimization under uncertainty for industrial energy systems: contracts, PV+BESS, CVaR, and MEM cost-stack exposure." />
+  <link rel="canonical" href="https://juanfraire.github.io/storm/" />
+  <meta property="og:site_name" content="STORM · by Pyrion" />
+  <meta property="og:title" content="STORM — Energy Intelligence Engine · by Pyrion" />
+  <meta property="og:description" content="Optimization under uncertainty for industrial energy systems: contracts, PV+BESS, CVaR, and MEM cost-stack exposure. The research engine behind Pyrion." />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://storm-optimization.github.io/" />
+  <meta property="og:url" content="https://juanfraire.github.io/storm/" />
   <meta property="og:image" content="assets/og-card.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
@@ -24,11 +25,14 @@
     "@context": "https://schema.org",
     "@type": "ResearchProject",
     "name": "STORM - Stochastic Trading and Optimization under Regulation for MEM",
-    "description": "A two-stage stochastic MILP for procurement and DER sizing under the Argentine Wholesale Electricity Market (MEM). Model, solver implementation, and numerical campaign.",
-    "softwareHelp": "https://github.com/storm-optimization/storm",
-    "funder": [
-      { "@type": "Organization", "name": "CEISA" }
-    ],
+    "description": "A two-stage stochastic MILP for procurement and DER sizing under the Argentine Wholesale Electricity Market (MEM). Model, solver implementation, and numerical campaign. The optimization engine behind Pyrion.",
+    "url": "https://juanfraire.github.io/storm/",
+    "softwareHelp": "https://github.com/juanfraire/storm",
+    "funder": {
+      "@type": "Organization",
+      "name": "Pyrion",
+      "url": "https://www.pyrion.com.ar/"
+    },
     "programmingLanguage": "Python",
     "applicationCategory": "Scientific Computing"
   }
@@ -37,7 +41,7 @@
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Manrope:wght@700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" />
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous" />
 
@@ -54,6 +58,7 @@
         <img src="assets/mark.svg" alt="STORM mark" />
         <span>STORM</span>
       </a>
+      <a class="nav-byline" href="https://www.pyrion.com.ar/" target="_blank" rel="noopener" data-i18n="nav.byline">by <b>Pyrion</b></a>
       <div class="nav-links">
         <a href="#model" data-i18n="nav.model">Model</a>
         <a href="#workflow" data-i18n="nav.workflow">Workflow</a>
@@ -64,9 +69,9 @@
         <a href="#engagement" data-i18n="nav.engagement">Engagement</a>
       </div>
       <div class="nav-right">
-        <div class="lang-toggle" role="group" aria-label="Language">
-          <button type="button" data-lang-btn="en" aria-pressed="true">EN</button>
-          <button type="button" data-lang-btn="es" aria-pressed="false">ES</button>
+        <div class="lang-toggle" role="group" aria-label="Idioma">
+          <button type="button" data-lang-btn="es" aria-pressed="true">ES</button>
+          <button type="button" data-lang-btn="en" aria-pressed="false">EN</button>
         </div>
         <a class="nav-cta" href="#read">
           <span data-i18n="nav.cta">Read the paper</span>
@@ -846,7 +851,7 @@ m.<span class="fn">optimize</span>()  <span class="com"># MIP gap target 2% · r
       <p class="lede" style="margin: 0 auto 12px; text-align: center;" data-i18n="cta.lede">
         A two-stage stochastic MILP for procurement and DER sizing under the
         Argentine MEM normalization process — open implementation, reproducible
-        campaign, anonymized for review.
+        campaign, and the optimization engine behind Pyrion.
       </p>
       <p class="mono-12" style="margin: 0 auto 32px; text-align: center; color:var(--text-3);" data-i18n="cta.paperNote">
         Paper available on request · preprint coming after peer review.
@@ -869,26 +874,25 @@ m.<span class="fn">optimize</span>()  <span class="com"># MIP gap target 2% · r
         <div class="footer-brand">
           <img src="assets/mark.svg" alt="" />
           <div>
-            <div style="color:var(--text-1); font-family:var(--display); font-weight:600; letter-spacing:0.18em;">STORM</div>
+            <div style="color:var(--text-1); font-family:'Manrope', var(--display); font-weight:800; letter-spacing:0.16em;">STORM</div>
             <div style="font-size:11px; letter-spacing:0.06em;">Stochastic Trading and Optimization under Regulation · MEM</div>
+            <a href="https://www.pyrion.com.ar/" target="_blank" rel="noopener" style="display:inline-block; margin-top:8px; font-family:var(--mono); font-size:11px; letter-spacing:0.06em; color:var(--text-3);" data-i18n="foot.byline">The optimization engine behind <b style="color:var(--cyan);">Pyrion →</b></a>
           </div>
         </div>
         <div style="display:flex; gap:32px; flex-wrap:wrap;">
           <div>
             <div class="mono-12" style="color:var(--text-2); margin-bottom:6px;" data-i18n="foot.affiliation">Affiliation</div>
-            <div>CEISA</div>
-            <!-- <div>Inria · INSA Lyon · CITI · UR3720</div> -->
+            <div>Pyrion · CONICET-UNC · Inria</div>
           </div>
           <div>
             <div class="mono-12" style="color:var(--text-2); margin-bottom:6px;" data-i18n="foot.stack">Solver / stack</div>
             <div>Python · Gurobi 11 · NumPy / Pandas</div>
-            <!-- <div>IEEEtran manuscript · LaTeX</div> -->
           </div>
         </div>
       </div>
       <div class="footer-meta">
         <span data-i18n="foot.indexTerms">Index Terms — Stochastic optimization · MILP · BESS · MEM · MATER · MATE · MATP · CVaR · large industrial users</span>
-        <span data-i18n="foot.copy">© 2025 · Anonymized for double-blind review</span>
+        <span data-i18n="foot.copy">© 2026 Pyrion · Córdoba, Argentina</span>
       </div>
     </div>
   </footer>

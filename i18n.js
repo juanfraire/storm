@@ -20,6 +20,7 @@
       'nav.applications': 'Applications',
       'nav.engagement': 'Engagement',
       'nav.cta': 'Read the paper',
+      'nav.byline': 'by <b>Pyrion</b>',
 
       /* hero */
       'hero.eyebrow': 'Two-stage stochastic MILP · CVaR-aware · MEM Resolución SE&nbsp;400/2025',
@@ -209,7 +210,7 @@
 
       /* final CTA */
       'cta.h2': 'Engineering optimization <span class="gradient">under uncertainty.</span>',
-      'cta.lede': 'A two-stage stochastic MILP for procurement and DER sizing under the Argentine MEM normalization process — open implementation, reproducible campaign, anonymized for review.',
+      'cta.lede': 'A two-stage stochastic MILP for procurement and DER sizing under the Argentine MEM normalization process — open implementation, reproducible campaign, and the optimization engine behind Pyrion.',
       'cta.paperNote': 'Paper available on request · preprint coming after peer review.',
       'cta.read': 'Read the scientific foundation',
       'cta.code': 'View the implementation',
@@ -239,9 +240,10 @@
 
       /* footer */
       'foot.affiliation': 'Affiliation',
+      'foot.byline': 'The optimization engine behind <b style="color:var(--cyan);">Pyrion →</b>',
       'foot.stack': 'Solver / stack',
       'foot.indexTerms': 'Index Terms — Stochastic optimization · MILP · BESS · MEM · MATER · MATE · MATP · CVaR · large industrial users',
-      'foot.copy': '© 2025 · Anonymized for double-blind review',
+      'foot.copy': '© 2026 Pyrion · Córdoba, Argentina',
 
       /* chart text (rendered by app.js) */
       'chart.cost': 'cost · kUSD/y',
@@ -270,6 +272,7 @@
       'nav.applications': 'Aplicaciones',
       'nav.engagement': 'Adopción',
       'nav.cta': 'Leer el paper',
+      'nav.byline': 'por <b>Pyrion</b>',
 
       /* hero */
       'hero.eyebrow': 'MILP estocástico de dos etapas · con CVaR · MEM · Resolución SE&nbsp;400/2025',
@@ -460,7 +463,7 @@
 
       /* final CTA */
       'cta.h2': 'Optimización computacional <span class="gradient">bajo incertidumbre.</span>',
-      'cta.lede': 'Un MILP estocástico de dos etapas para abastecimiento y dimensionamiento DER bajo el proceso de normalización del MEM argentino: implementación abierta, campaña reproducible y versión anonimizada para revisión.',
+      'cta.lede': 'Un MILP estocástico de dos etapas para abastecimiento y dimensionamiento DER bajo el proceso de normalización del MEM argentino: implementación abierta, campaña reproducible y el motor de optimización detrás de Pyrion.',
       'cta.read': 'Leer la base científica',
       'cta.code': 'Ver el código',
       'cta.results': 'Explorar la campaña',
@@ -489,9 +492,10 @@
 
       /* footer */
       'foot.affiliation': 'Afiliación',
+      'foot.byline': 'El motor de optimización detrás de <b style="color:var(--cyan);">Pyrion →</b>',
       'foot.stack': 'Solver / entorno',
       'foot.indexTerms': 'Términos índice — Optimización estocástica · MILP · BESS · MEM · MATER · MATE · MATP · CVaR · Grandes Usuarios industriales',
-      'foot.copy': '© 2025 · Versión anonimizada para revisión doble ciego',
+      'foot.copy': '© 2026 Pyrion · Córdoba, Argentina',
 
       /* chart text */
       'chart.cost': 'costo · kUSD/a',

@@ -40,9 +40,12 @@
   --arg-gold: #F6B40E;
   --arg-gold-light: #FFD54F;
 
-  /* Gradients */
-  --grad-storm: linear-gradient(135deg, var(--arg-celeste) 0%, var(--cyan) 40%, var(--azure) 100%);
-  --grad-storm-soft: linear-gradient(135deg, rgba(117,170,219,0.15) 0%, rgba(91,212,255,0.10) 55%, rgba(79,139,255,0.12) 100%);
+  /* Gradients — unified with the Pyrion brand (azure → cyan).
+     The celeste/gold flag palette above survives only as shared accent
+     details (.arg-divider flag stripe, gold chart/hedge highlights),
+     mirrored on the pyrion.com.ar landing site. */
+  --grad-storm: linear-gradient(135deg, var(--azure) 0%, var(--cyan) 100%);
+  --grad-storm-soft: linear-gradient(135deg, rgba(79,139,255,0.14) 0%, rgba(91,212,255,0.10) 100%);
   --grad-arg: linear-gradient(180deg, var(--arg-celeste) 0%, var(--arg-white) 50%, var(--arg-celeste) 100%);
 
   /* Typography */
@@ -84,7 +87,7 @@ html, body { margin: 0; padding: 0; }
 html { scroll-behavior: smooth; overflow-x: hidden; }
 body {
   font-family: var(--sans);
-  background: var(--bg-1);
+  background: var(--bg-0);
   color: var(--text-1);
   line-height: 1.55;
   font-feature-settings: "ss01", "cv11", "tnum";
@@ -214,12 +217,33 @@ code, .mono { font-family: var(--mono); }
 }
 .nav-brand {
   display: flex; align-items: center; gap: 10px;
-  font-family: var(--display);
-  font-weight: 600;
   font-size: 18px;
-  letter-spacing: 0.18em;
+}
+/* wordmark uses Manrope (shared Pyrion logotype), distinct from Space Grotesk headings */
+.nav-brand span {
+  font-family: 'Manrope', var(--display);
+  font-weight: 800;
+  letter-spacing: 0.16em;
 }
 .nav-brand img { width: 28px; height: 28px; }
+/* "by Pyrion" lockup next to the STORM wordmark */
+.nav-byline {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--text-3);
+  padding-left: 12px;
+  margin-left: 2px;
+  margin-right: auto;          /* absorbs free space: keeps brand+byline left, links/controls right */
+  border-left: 1px solid var(--border);
+  white-space: nowrap;
+  text-decoration: none;
+  transition: color 0.25s;
+}
+.nav-byline:hover { color: var(--cyan); }
+.nav-byline b { color: var(--text-2); font-weight: 600; }
+/* hide the "by Pyrion" lockup once the 7 nav links crowd the bar (footer keeps the backlink) */
+@media (max-width: 1024px) { .nav-byline { display: none; } }
 .nav-links {
   display: flex; gap: 28px;
   font-size: 14px;
@@ -240,7 +264,7 @@ code, .mono { font-family: var(--mono); }
   transition: all 0.2s;
 }
 .nav-cta:hover { border-color: var(--cyan); background: rgba(91,212,255,0.05); }
-.nav-right { display: inline-flex; align-items: center; gap: 14px; }
+.nav-right { display: inline-flex; align-items: center; gap: 14px; margin-left: 28px; }
 .lang-toggle {
   display: inline-flex;
   border: 1px solid var(--border-strong);
