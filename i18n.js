@@ -540,6 +540,9 @@
     document.querySelectorAll('[data-i18n]').forEach(el => {
       const key = el.getAttribute('data-i18n');
       const val = t(key);
+      // missing key (t() echoes the key back) — keep the static HTML fallback
+      // rather than painting the raw "nav.byline" key on screen
+      if (val === key) return;
       // skip if the value is identical to current innerHTML to avoid spurious paints
       if (el.innerHTML !== val) el.innerHTML = val;
     });
