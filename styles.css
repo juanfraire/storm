@@ -245,7 +245,7 @@ code, .mono { font-family: var(--mono); }
 /* hide the "by Pyrion" lockup once the 7 nav links crowd the bar (footer keeps the backlink) */
 @media (max-width: 1024px) { .nav-byline { display: none; } }
 .nav-links {
-  display: flex; gap: 28px;
+  display: flex; gap: 22px;
   font-size: 14px;
 }
 .nav-links a {

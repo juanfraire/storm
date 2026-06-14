@@ -1,0 +1,13 @@
+{
+  "name": "STORM — Energy optimization engine · by Pyrion",
+  "short_name": "STORM",
+  "description": "Two-stage stochastic MILP for procurement and DER sizing under the Argentine MEM. The optimization engine behind Pyrion.",
+  "start_url": "/storm/",
+  "display": "browser",
+  "background_color": "#050810",
+  "theme_color": "#050810",
+  "icons": [
+    { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
